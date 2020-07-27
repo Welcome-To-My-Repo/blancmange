@@ -35,12 +35,12 @@ For example, an integer holding the value 65,356 represents the coordinates 1,0 
 * `j` jump to coordinates using register 0.
 * `@` end program
 
-* ! spawn a new PC.
-* ~ Pop x and pause the PC with the matching character.
-* , Pop x and resume the PC with the matching character.
-* \` Pop x and end the PC with the matching character.
-* t Pop x and push x with PC identifier
-* T Pop x and push x with a byte representing the total number of Program Counters running.
+* `!` spawn a new PC.
+* `~` Pop x and pause the PC with the matching character.
+* `,` Pop x and resume the PC with the matching character.
+* `\`` Pop x and end the PC with the matching character.
+* `t` Pop x and push x with PC identifier
+* `T` Pop x and push x with a byte representing the total number of Program Counters running.
 
 ---
 
@@ -57,13 +57,13 @@ Registers A-F are used for unsigned integer operations
 
 ### Register Operations
 
-* 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F Sets the current register.
-* i Load the integer following this instruction into the current register.
-* c Load the character following this instruction into the current register.
-* X Load a zero torus X coordinate into the current register.
-* Y Load a zero torus Y coordinate into the current register.
-* Q Loads the current X,Y position if the PC onto the register.
-* P Pushes the current register onto the stack.
+* `0123456789ABCDEF` Sets the current register.
+* `i` Load the integer following this instruction into the current register.
+* `c` Load the character following this instruction into the current register.
+* `X` Load a zero torus X coordinate into the current register.
+* `Y` Load a zero torus Y coordinate into the current register.
+* `Q` Loads the current X,Y position if the PC onto the register.
+* `P` Pushes the current register onto the stack.
 
 ---
 
@@ -75,9 +75,9 @@ Instructions that operate on register data will know which registers to use by p
 
 ### Stack Instructions
 
-* p Pop a register from the stack and do nothing.
-* : Duplicate the top of the stack.
-* \\ Switch the top two Datums on the stack.
+* `p` Pop a register from the stack and do nothing.
+* `:` Duplicate the top of the stack.
+* `\` Switch the top two Datums on the stack.
 
 ---
 
@@ -95,17 +95,17 @@ The torus only supports information in unsigned bytes, so word types are stored 
 All instructions below will pop register y, then pop register x, then push register x with the result.
 
 * `+` x \+ y
-* \- x \- y
-* \* x \* y
-* \/ x \/ y
-* \% x % y
+* `-` x \- y
+* `*` x \* y
+* `/` x \/ y
+* `%` x \% y
 
-* & Binary AND of x and y
-* O Binary OR of x and y
-* N Binary NOT of the top
-* ! Logical NOT of the top. If top is zero, a max integer value is pushed. If top is non-zero, a zeroed integer is pushed.
+* `&` Binary AND of x and y
+* `O` Binary OR of x and y
+* `N` Binary NOT of the top
+* `!` Logical NOT of the top. If top is zero, a max integer value is pushed. If top is non-zero, a zeroed integer is pushed.
 
-* C copy y to x.
+* `C` copy y to x.
 
 ---
 
@@ -116,13 +116,13 @@ Comparison instructions are used to set the Branch Flag.
 Comparison instructions will set the flag to one for true and zero for false.
 Comparison instructions pop register y, then pop register x, then set the Branch Flag.
 
-* l x < y
-* g x > y
-* = x == y
-* ? If true execute the next instruction. If false, skip the next instruction.
-* | If true, emulate ^. If false, emulate v.
-* _ If true, emulate <. If false, emulate >.
-* \# Unconditionally skips the next instruction.
+* `l` x < y
+* `g` x > y
+* `=` x == y
+* `?` If true execute the next instruction. If false, skip the next instruction.
+* `|` If true, emulate ^. If false, emulate v.
+* `_` If true, emulate <. If false, emulate >.
+* `#` Unconditionally skips the next instruction.
 
 ---
 
@@ -135,16 +135,16 @@ These streams are formatted so that characters and integers can both be read and
 
 Both Read and Write pop a register from the top of the stack.
 
-* [ Read a character into the top register.
-* ] Write a character from the top register.
-* { Read an integer into the top register.
-* } Write an integer into the top register.
+* `[` Read a character into the top register.
+* `]` Write a character from the top register.
+* `{` Read an integer into the top register.
+* `}` Write an integer into the top register.
 
 There is a set of special read and write instructions that allow Blancmange to read and write to and from the torus.
-* r Pops a register from the stack holding coordinates. Places the character found at those coordinates in the popped register and pushes it.
-* w Pops a registers y and x from the stack and writes the character in x at the coordinates y.
-* R Pops a register from the stack holding coordinates. Places the integer found at those coordinates in the popped register and pushes it.
-* W Pops registers y and x from the stack and writes the integer in x at the coordinates y.
+* `r` Pops a register from the stack holding coordinates. Places the character found at those coordinates in the popped register and pushes it.
+* `w` Pops a registers y and x from the stack and writes the character in x at the coordinates y.
+* `R` Pops a register from the stack holding coordinates. Places the integer found at those coordinates in the popped register and pushes it.
+* `W` Pops registers y and x from the stack and writes the integer in x at the coordinates y.
 
 Integers are read and written in little endian format in the current direction of the PC.
 
@@ -177,8 +177,8 @@ The address can be updated by writing a new integer to it.
 
 #### Page Device Instructions
 
-* Z Pops x and y. Creates page with x bytes at y coordinates.
-* z Pops a register with the coordinates of a Page to destroy.
+* `Z` Pops x and y. Creates page with x bytes at y coordinates.
+* `z` Pops a register with the coordinates of a Page to destroy.
 
 ---
 
@@ -206,16 +206,16 @@ Bit Representation
 
 Messages are written to "message"
 
-* r Read buffer size bytes from file and place in buffer
-* w Write buffer size bytes to file from buffer
-* o Open file
-* c Close file
+* "r" Read buffer size bytes from file and place in buffer
+* "w" Write buffer size bytes to file from buffer
+* "o" Open file
+* "c" Close file
 
 #### Error Flags
 
 Errors are read from "Error"
 
-* x File couldn't be opened
-* w File couldn't be written
-* r File couldn't be read
-* m not enough storage
+* "x" File couldn't be opened
+* "w" File couldn't be written
+* "r" File couldn't be read
+* "m" not enough storage
