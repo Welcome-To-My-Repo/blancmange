@@ -160,6 +160,8 @@ The simplest device would be a two byte mapping,
 [ ][ ]
 where the left byte is a single-byte buffer to be read from, and the right byte a stream to write messages to.
 A more complex device might include more mappings to represent a wider buffer, error flags, multiple streams, or states.
+When a device is successfully created, the register containing the coordinates where the device was created is pushed with the value 0.
+If an error occurs, the register is pushed with the value 1.
 Blancmange offers multiple pre-defined devices to allow access to various resources.
 
 ---
@@ -193,6 +195,11 @@ The File device has a 2x? byte mapping.
 [R: file size][W: file position]
 [W: file pathname
 
+#### File Device Instructions
+
+* 'F' Pops x and creates a File Device at x.
+* 'f' Pops X and destroys a File Device at x.
+
 #### Flags
 
 Flags Are written to "rwa flags"
@@ -221,3 +228,16 @@ Errors are read from "Error"
 * "w" File couldn't be written
 * "r" File couldn't be read
 * "m" not enough storage
+
+## Socket Device
+
+The Socket device allows Blancmange programs to access networking resources.
+The Socket device represents a single Berkley style socket.
+
+[W: domain][W: type][W: protocol][W: message]
+[R: state][R: error]
+
+### Socket Instructions
+
+* `B` Pops x and creates a Socket Device at coordinates x.
+* `b` Pops x and destroys a Socket Device at coordinates x.
