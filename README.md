@@ -116,6 +116,8 @@ Comparison instructions are used to set the Branch Flag.
 Comparison instructions will set the flag to one for true and zero for false.
 Comparison instructions pop register y, then pop register x, then set the Branch Flag.
 
+### Branch Instructions
+
 * `l` x < y
 * `g` x > y
 * `=` x == y
