@@ -11,7 +11,7 @@ Blancmange's main difference from Befunge is that it is intended to be an entire
 
 The Program Counter marks the current instruction.
 Unlike conventional program counters, the B64 PC is able to move forward, backward, upward, and downward.
-The PC moves through a torus of 2^16-1 x 2^16-1 bytes.
+The Program Counter moves through a torus of 256x1024 bytes.
 
 ### Concurrency
 
@@ -53,7 +53,6 @@ Register instructions operate on a single register.
 The current register can be selected using its number.
 Any loading and saving operations are done with that register until another is selected.
 Operations are performed using two registers as X and Y operands.
-
 Registers A-F are used for unsigned integer operations
 
 ### Register Operations
@@ -232,13 +231,4 @@ Errors are read from "Error"
 
 ## Socket Device
 
-The Socket device allows Blancmange programs to access networking resources.
-The Socket device represents a single Berkley style socket.
-
-[W: domain][W: type][W: protocol][W: message]
-[R: state][R: error]
-
-### Socket Instructions
-
-* `B` Pops x and creates a Socket Device at coordinates x.
-* `b` Pops x and destroys a Socket Device at coordinates x.
+Sockets coming soon after alpha!
