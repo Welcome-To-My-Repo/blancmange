@@ -1,7 +1,7 @@
 Blancmange 64
 ===
 
-Blancmange 64 is an esoteric interpreted programming language inspired by Befunge-93. 
+Blancmange 64 is an esoteric interpreted programming language inspired by Befunge-93.
 Blancmange's main difference from Befunge is that it is intended to be an entirely serious language for use in the real world.
 
 ---
@@ -39,7 +39,7 @@ For example, an integer holding the value 65,356 represents the coordinates 1,0 
 * `!` spawn a new PC.
 * `~` Pop x and pause the PC with the matching character.
 * `,` Pop x and resume the PC with the matching character.
-* `\`` Pop x and end the PC with the matching character.
+* `` ` `` Pop x and end the PC with the matching character.
 * `t` Pop x and push x with PC identifier
 * `T` Pop x and push x with a byte representing the total number of Program Counters running.
 
@@ -49,6 +49,8 @@ For example, an integer holding the value 65,356 represents the coordinates 1,0 
 
 There are sixteen registers numbered 0 through F.
 Datums can be loaded and saved from registers.
+There are sixteen registers numbered 0 through F.
+Datums can be loaded and saved from registers.
 Register instructions operate on a single register.
 The current register can be selected using its number.
 Any loading and saving operations are done with that register until another is selected.
@@ -56,14 +58,18 @@ Operations are performed using two registers as X and Y operands.
 Registers A-F are used for unsigned integer operations
 
 ### Register Operations
-
-* `0123456789ABCDEF` Sets the current register.
+* `'` Rotate current register.
+* `0123456789ABCDEF` or `0123456789abcdef` Sets the current register.
 * `i` Load the integer following this instruction into the current register.
 * `c` Load the character following this instruction into the current register.
 * `X` Load a zero torus X coordinate into the current register.
 * `Y` Load a zero torus Y coordinate into the current register.
 * `Q` Loads the current X,Y position if the PC onto the register.
 * `P` Pushes the current register onto the stack.
+
+The commands `i` and `c` engage a special mode that will read in a hexadecimal value.
+`i` will read in eight bytes and `c` will read in a single byte.
+ex: `c2E` Reads in the exclamation character
 
 ---
 
@@ -205,8 +211,8 @@ The File device has a 2x? byte mapping.
 Flags Are written to "rwa flags"
 
 Bit Representation
-1. read only 
-2. write only 
+1. read only
+2. write only
 4. read and write only
 8. open in append mode
 16. open in overwrite mode
