@@ -18,6 +18,7 @@ The PC moves through a torus of 2^16-1 x 2^16-1 bytes.
 Blancmange supports up to 255 separate Program Counters simultaneously.
 Each program counter is assigned a byte identifier upon creation.
 The initial Program Counter always has an ID of 0.
+Each of the 255 program counters has its own Registers and Stack
 
 ### Torus Coordinates
 
