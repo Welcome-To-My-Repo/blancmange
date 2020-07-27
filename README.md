@@ -27,13 +27,13 @@ For example, an integer holding the value 65,356 represents the coordinates 1,0 
 
 ### Program Counter Instructions
 
-*  Whitespace represents no operation. The current direction is continued.
-* ^ Change direction upwards.
-* v Change direction downwards.
-* \< Change direction right.
-* \> Change direction left.
-* j jump to coordinates using register 0.
-* @ end program
+* ` ` Whitespace represents no operation. The current direction is continued.
+* `^` Change direction upwards.
+* `v` Change direction downwards.
+* `<` Change direction right.
+* `>` Change direction left.
+* `j` jump to coordinates using register 0.
+* `@` end program
 
 * ! spawn a new PC.
 * ~ Pop x and pause the PC with the matching character.
@@ -94,8 +94,8 @@ The torus only supports information in unsigned bytes, so word types are stored 
 
 All instructions below will pop register y, then pop register x, then push register x with the result.
 
-* + x + y
-* - x - y
+* `+` x \+ y
+* \- x \- y
 * \* x \* y
 * \/ x \/ y
 * \% x % y
