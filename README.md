@@ -1,240 +1,133 @@
-Blancmange 64
+Blancmange
 ===
 
-Blancmange 64 is an esoteric interpreted programming language inspired by Befunge-93.
-Blancmange's main difference from Befunge is that it is intended to be an entirely serious language for use in the real world.
+An esoteric language.
 
 ---
 
+# Instruction Pointer Instructions
 
-## The Program Counter
-
-The Program Counter marks the current instruction.
-Unlike conventional program counters, the B64 PC is able to move forward, backward, upward, and downward.
-The Program Counter moves through a torus of 256x1024 bytes.
-
-### Concurrency
-
-Blancmange supports up to 255 separate Program Counters simultaneously.
-Each program counter is assigned a byte identifier upon creation.
-The initial Program Counter always has an ID of 0.
-Each of the 255 program counters has its own Registers and Stack
-
-### Torus Coordinates
-
-The torus coordinates begin at the upper left corner at 0x0.
-Coordinates are compressed into the two least significant 16 bit values in an integer type.
-For example, an integer holding the value 65,356 represents the coordinates 1,0 in the torus.
-
-### Program Counter Instructions
-
-* ` ` Whitespace represents no operation. The current direction is continued.
-* `^` Change direction upwards.
-* `v` Change direction downwards.
-* `<` Change direction right.
-* `>` Change direction left.
-* `j` jump to coordinates using register 0.
-* `@` end program
-
-* `!` spawn a new PC.
-* `~` Pop x and pause the PC with the matching character.
-* `,` Pop x and resume the PC with the matching character.
-* `` ` `` Pop x and end the PC with the matching character.
-* `t` Pop x and push x with PC identifier
-* `T` Pop x and push x with a byte representing the total number of Program Counters running.
+* ` `	no operation
+* `.`	move forward
+* `,`	move backward
+* `^`	Rotate up
+* `v`	Rotate down
+* `<`	rotate left
+* `>`	rotate right
+* `@`	unconditional jump using r1-r3 for coordinates
+* `#`	unconditional bridge
 
 ---
 
-## Registers
+# Register Instructions
 
-There are sixteen registers numbered 0 through F.
-Datums can be loaded and saved from registers.
-There are sixteen registers numbered 0 through F.
-Datums can be loaded and saved from registers.
-Register instructions operate on a single register.
-The current register can be selected using its number.
-Any loading and saving operations are done with that register until another is selected.
-Operations are performed using two registers as X and Y operands.
-Registers A-F are used for unsigned integer operations
-
-### Register Operations
-* `'` Rotate current register.
-* `0123456789ABCDEF` or `0123456789abcdef` Sets the current register.
-* `i` Load the integer following this instruction into the current register.
-* `c` Load the character following this instruction into the current register.
-* `X` Load a zero torus X coordinate into the current register.
-* `Y` Load a zero torus Y coordinate into the current register.
-* `Q` Loads the current X,Y position if the PC onto the register.
-* `P` Pushes the current register onto the stack.
-
-The commands `i` and `c` engage a special mode that will read in a hexadecimal value.
-`i` will read in eight bytes and `c` will read in a single byte.
-ex: `c2E` Reads in the exclamation character
+* `0123456789ABCDEF` Select Register
+* `l`	shift left
+* `r`	shift right
+* `L`	rotate left
+* `R`	rotate right
+* `f`	flip first bit
+* `j`	flip last bit
+* `"`	set r1-r3 to current coordinates
+* `P`	Push register to stack
 
 ---
 
-## The Stack
+# Register Operation Stack Instructions
 
-The Stack is a LIFO structure used to control access to registers for operations.
-In order for a register to be used in an operation, its number mustbe pushed onto the stack.
-Instructions that operate on register data will know which registers to use by popping register numbers off the stack and accessing the corresponding registers.
-
-### Stack Instructions
-
-* `p` Pop a register from the stack and do nothing.
-* `:` Duplicate the top of the stack.
-* `\` Switch the top two Datums on the stack.
-
----
-
-## Data Types
-
-Blancmange supports three data types, signed and unsigned 64 bit words and the unsigned byte.
-These types can be used interchangeably.
-Signed and Unsigned Words are converted by copying between registers.
-Copying a word to a character will only preserve the least significant byte.
-únsigned Words are used for coordinates and memory addresses outside of the torus and anywhere else where two's compliment won't make sense.
-The torus only supports information in unsigned bytes, so word types are stored across a series of eight bytes in little endian format.
-
-### Data Instructions
-
-All instructions below will pop register y, then pop register x, then push register x with the result.
-
-* `+` x \+ y
-* `-` x \- y
-* `*` x \* y
-* `/` x \/ y
-* `%` x \% y
-
-* `&` Binary AND of x and y
-* `O` Binary OR of x and y
-* `N` Binary NOT of the top
-* `!` Logical NOT of the top. If top is zero, a max integer value is pushed. If top is non-zero, a zeroed integer is pushed.
-
-* `C` copy y to x.
+* `p`	pop from stack
+* `d`	duplicate top
+* `s`	sWitch two top
+* `&`	binary AND
+* `o`	binary OR
+* `!`	binary NOT
+* `+`	addition
+* `-`	subtraction
+* `*`	multiplication
+* `/`	division
+* `%`	modulus
 
 ---
 
-## Branching
+# Flag Register Instructions
 
-Branch instructions use a special Branch Flag that is always set to one or zero.
-Comparison instructions are used to set the Branch Flag.
-Comparison instructions will set the flag to one for true and zero for false.
-Comparison instructions pop register y, then pop register x, then set the Branch Flag.
-
-### Branch Instructions
-
-* `l` x < y
-* `g` x > y
-* `=` x == y
-* `?` If true execute the next instruction. If false, skip the next instruction.
-* `|` If true, emulate ^. If false, emulate v.
-* `_` If true, emulate <. If false, emulate >.
-* `#` Unconditionally skips the next instruction.
+* `g`	greater than, set r0 to 1
+* `l`	less than, set r0 to 1
+* `=`	if equal, set r0 to 1
+* `?`	if r0 is 0, skip next instruction
 
 ---
 
-## Input and Output
+# I/O Instructions
 
-Blancmange programs are guaranteed to always have a default input and output stream.
-These streams are formatted so that characters and integers can both be read and written to them without requiring conversion.
-
-### Input and Output Instructions
-
-Both Read and Write pop a register from the top of the stack.
-
-* `[` Read a character into the top register.
-* `]` Write a character from the top register.
-* `{` Read an integer into the top register.
-* `}` Write an integer into the top register.
-
-There is a set of special read and write instructions that allow Blancmange to read and write to and from the torus.
-* `r` Pops a register from the stack holding coordinates. Places the character found at those coordinates in the popped register and pushes it.
-* `w` Pops a registers y and x from the stack and writes the character in x at the coordinates y.
-* `R` Pops a register from the stack holding coordinates. Places the integer found at those coordinates in the popped register and pushes it.
-* `W` Pops registers y and x from the stack and writes the integer in x at the coordinates y.
-
-Integers are read and written in little endian format in the current direction of the PC.
+* `[`	reads byte from coordinates in r1-r3 and sets r0 with byte
+* `]`	writes byte from r0 to coordinates in r1-r3
+* `(`	reads word from coordinates in r1-r3 and sets r4 with it
+* `)`	writes word from r4 to coordinates in r1-r3
 
 ---
 
-## Devices
+# Buffer Instructions
 
-Devices are objects created by the runtime mapped onto the torus that allow Blancmange programs to interface with the underlying system.
-Specific bytes can be read and written to that represent device states or messages.
-The simplest device would be a two byte mapping,
-[ ][ ]
-where the left byte is a single-byte buffer to be read from, and the right byte a stream to write messages to.
-A more complex device might include more mappings to represent a wider buffer, error flags, multiple streams, or states.
-When a device is successfully created, the register containing the coordinates where the device was created is pushed with the value 0.
-If an error occurs, the register is pushed with the value 1.
-Blancmange offers multiple pre-defined devices to allow access to various resources.
-
----
-
-### The Page Device
-
-If a Blancmange program requires memory beyond what is available in the torus, the Page object can be used.
-The Page object represents a memory segment of 1KB.
-It has a 1x9 byte mapping with a byte the left and an integer on the left.
-
-[read][write]
-
-The first byte can be read from.
-It represents a byte from the array.
-The integer represents the address of the byte in the Page.
-The address can be updated by writing a new integer to it.
-
-#### Page Device Instructions
-
-* `Z` Pops x and y. Creates page with x bytes at y coordinates.
-* `z` Pops a register with the coordinates of a Page to destroy.
+* `M`	Creates new buffer with size taken from r4. Sets r4 with the buffer address.
+* `m`	Frees buffer at address in r4
+* `w`	reads word from buffer located in r4 at offset in r5 to r6
+* `W`	writes word in r6 at offset in r5 at buffer located in r4
+* `b`	reads byte from buffer located in r4 at offset in r5 to r0
+* `B`	writes byte in r1 at offset in r5 at buffer located in r4
+* `x`	sets buffer located at r4 to be executable
+* `z`	sets buffer located at r4 to be read/write-able
+* `E`	Executes buffer located at r4
 
 ---
 
-### The File Device
+# System Interface
 
-The File device lets Blancmange read and write to the filesystem.
-The File device has a 2x? byte mapping.
+* `S`	Calls Kernel using r4-r9 for parameters. Return value is placed in r4.
 
-[W: rwa flags][W: message][R: Error][W: buffer size][W: buffer location]
-[R: file size][W: file position]
-[W: file pathname
+---
 
-#### File Device Instructions
+# Blancmange Source Format
 
-* 'F' Pops x and creates a File Device at x.
-* 'f' Pops X and destroys a File Device at x.
+Blancmange executes code in a three dimensional tesseract.
+The dimensions of the cube are 256^3 bytes.
 
-#### Flags
+source code is formatted as 256 individual 256x256 planes of x and y coordinates
+each plane added to the source represents a new plane further along the z coordinate.
+All three coordinates begin at zero.
+Each character across increases x.
+Each line increases y.
+Each additional plane increases z.
 
-Flags Are written to "rwa flags"
+* `{`	begin a new 256x256 plane on the next line
+* `;`	end a line before 256 chatacters
+* `}`	end a plane before 256 lines
 
-Bit Representation
-1. read only
-2. write only
-4. read and write only
-8. open in append mode
-16. open in overwrite mode
+---
 
-#### Messages
+# The Program Counter
 
-Messages are written to "message"
+The Program Counter can move forward or backward along an axis.
+The direction can be rotated upward, downward, left, or right.
+When a program starts, the PC begins at 0,0,0 and moves forward along the x axis.
 
-* "r" Read buffer size bytes from file and place in buffer
-* "w" Write buffer size bytes to file from buffer
-* "o" Open file
-* "c" Close file
+---
 
-#### Error Flags
+# Blancmange Registers
 
-Errors are read from "Error"
+There are sixteen registers in Blamcmange.
+Registers 0-3 are 8bit.
+Registers 4-9 are unsigned 64bit.
+Registers A-F are signed 64bit.
+r0 doubles as a flag register for comparisons.
+A register can be selected as the current register.
+Register instructions operate on the current register.
 
-* "x" File couldn't be opened
-* "w" File couldn't be written
-* "r" File couldn't be read
-* "m" not enough storage
+---
 
-## Socket Device
+# The Register Stack
 
-Sockets coming soon after alpha!
+Operations that use two registers use the register stack.
+Registers are pushed to the stack via their ID.
+Stack instructions consume register ID's from the stack to determine which registers they operate on.
+Each instruction will pop y, then x and will perform an operation of x by y (as in x / y or x + y).
