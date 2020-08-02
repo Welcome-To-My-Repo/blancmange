@@ -487,9 +487,50 @@ int run (int I, int O)
 			}
 			case '&':
 			{
+				if (p == 0)
+					return NOT_ENOUGH_STACK;
+				if (p == 1)
+				{
+					s[p - 1] = s[p - 1] && s[p];
+					p --;
+					s[p] = 0;
+				}
+				else
+				{
+					s[p - 1] = s[p - 1] && s[p];
+					p -= 2;
+				}
 				break;
 			}
-
+			case '|':
+			{
+				if(p == 0)
+					return NOT_ENOUGH_STACK;
+				if (p == 1)
+				{
+					s[p - 1] = s[p - 1] || s[p];
+					p --;
+					s[p] = 0;
+				}
+				else
+				{
+					s[p - 1] = s[p - 1] || s[p];
+					p -= 2;
+				}
+				break;
+			}
+			case '!':
+			{
+				if (s[p] != 0)
+				{
+					s[p] = !s[p];
+					if (p == 0)
+						s[p] = 0;
+					else
+						p --;
+				}
+				break;
+			}
 		}
 		switch (ip.o)
 		{
