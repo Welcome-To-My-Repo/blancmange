@@ -40,7 +40,7 @@ An esoteric language.
 
 # Operand Stack Instructions
 
-* `p`	pop from stack
+* `p`	pop from stack and set the current register to the value in the popped register.
 * `c`	duplicate top
 * `u`	sWitch top with below
 * `&`	binary AND
@@ -61,6 +61,9 @@ An esoteric language.
 * `l`	less than, set r0 to 255
 * `=`	if equal, set r0 to 255
 * `?`	if r0 is 0, skip next instruction
+* `b`	if r0 is 0, emulate `<` otherwise emulate `>`
+* `B`	if r0 is 0, emulate `v` otherwise emulate `^`
+* `Z`	if r0 is 0, emulate `.` otherwise emulate `,`
 
 ---
 
@@ -72,6 +75,10 @@ An esoteric language.
 * `)`	writes word from r4 to coordinates in r1-r3
 * `I`	Read in a byte from default stream into r0
 * `O`	Write a byte to the default stream from r0
+* `w`	Write byte from r0 to memory address r5 plus offset r6
+* `W`	write word from r4 to memory address r5 plus offset r6
+* `j`	read byte from memory address r5 plus offset r6 to r0
+* `J`	read word from memory address r5 plus offser r6 to r4
 
 ---
 

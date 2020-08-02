@@ -1,12 +1,16 @@
 {~ A Blancmange HelloWorld ~
 v    >        .;~move downward~
 1;~setting up the registers~
+k;
 \00;
 2;
+k;
 \00;
 3;
+k;
 \01;
 4;
+K;
 \07;
 \00;
 \00;
