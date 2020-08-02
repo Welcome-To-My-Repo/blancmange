@@ -8,7 +8,7 @@ syn match C "\~.*\~"
 hi link C Comment
 
 syn match S "[{|}|;]"
-hi link S Error
+hi link S PreProc
 
 syn match PC "[>|<|\^|v|\.|@|#|Q]"
 hi link PC Type
@@ -28,7 +28,11 @@ hi link Cmp Identifier
 syn match IO "[\[|\]|\(|\)|I|O]"
 hi link IO Operator
 
+syn match Byte "\\\x\x"
+hi link Byte Error
+
 syn match Sys "Y"
+syn match Sys "Q"
 hi link Sys Special
 
 let b:current_syntax = "Blancmange"

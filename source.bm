@@ -1,9 +1,9 @@
 {
 	>;~ A Blancmange Hello World ~
-	<1Pd2Pd3Pd___fv~Zero all the byte registers~;
-	             ~^Down to next plane.~;
+	<1Pc2Pc3Pc___fv~Zero all the byte registers, set the string address~;
+	           ~  ^ Down to next plane.~;
 {
-	Hello, world!~This is the string.~; 
+	Hello, world!~This is the string on the 2nd plane.~; 
 }
 {
 	;
@@ -16,6 +16,9 @@
 	s;
 	f;
 	5;
-	<#>5P4Pl0!?Q[O3i>;
-	  >             >;
+	P;
+	c;
+	_~zero r5 to count loops~;
+	<#>5P4Pl0!?Q[O3i>~check if r5 is less than r4 then write out~;
+	  >             >~loop continuation~;
 }

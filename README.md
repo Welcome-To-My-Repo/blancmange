@@ -5,15 +5,14 @@ An esoteric language.
 
 ---
 
-# Program Counter Instructions
+# Instruction Pointer Instructions
 
 * ` `	no operation
-* `.`	move forward
-* `,`	move backward
-* `^`	rotate up
-* `v`	rotate down
-* `<`	rotate left
-* `>`	rotate right
+* `.`	Reverse direction
+* `^`	Rotate Upward
+* `v`	Rotate Downward
+* `<`	Rotate to the left
+* `>`	Rotate to the right
 * `@`	unconditional jump using r1-r3 for coordinates
 * `#`	unconditional bridge
 * `Q`	end program
@@ -36,7 +35,7 @@ An esoteric language.
 
 ---
 
-# Register Operation Stack Instructions
+# Operand Stack Instructions
 
 * `p`	pop from stack
 * `c`	duplicate top
@@ -100,6 +99,17 @@ The source code is oriented so that it represents a view of the cube from its bo
 * `;`	end a line before 256 chatacters
 * `}`	end a plane before 256 lines
 * `~`	surrounds comments
+* `\\`	escapes byte values
+* Tab characters and other invisible or control characters are ignored.
+
+## Encoding Raw Bytes in Source Code
+
+Raw byte values can be enoded in a text file through use of the backslash, `\\`.
+Each byte is represented by a two-digit hexadecimal value prepended by a backslash.
+`\6F` or `\a0`
+
+Be aware that each three-character byte represents a single byte internally.
+Code appearing after encoded bytes may not be properly aligned.
 
 ---
 
@@ -108,6 +118,19 @@ The source code is oriented so that it represents a view of the cube from its bo
 The Program Counter can move forward or backward along an axis.
 The direction can be rotated upward, downward, left, or right.
 When a program starts, the PC begins at 0,0,0 and moves forward along the x axis.
+
+## Orientation
+
+Normally, n-dimensional programming languages change the direction of the pointer by orienting it to an axis where it increases or decreases.
+Blancmange uses rotations instead of orientations; the movement of the pointer is disjoint from the axis of the cube.
+The Instruction Pointer has the option to rotate 90 degrees left, right, upwards, or downwards, with respect to its current forward direction.
+Consider if the pointer started execution increasing on the X-axis.
+A *rotate downwards* instruction would turn the pointer to increase on the Z-axis.
+Consider again if the pointer was increasing on the X-axis and encountered this series of instructions, `v>>^^`.
+By the second *rotate upwards* instruction, the pointer would be decreasing on the Z-axis.
+This is because the local axis of the pointer were rotated 180 degrees as a side effect.
+This rotation could be corrected by this series of instructions, `^^.`.
+The two upward rotations would right the pointer, but it would be facing the opposite way, so the *reverse direction* instruction is used.
 
 ---
 
@@ -123,7 +146,7 @@ Register instructions operate on the current register.
 
 ---
 
-# The Register Stack
+# The Operand Stack
 
 Operations that use two registers use the register stack.
 Registers are pushed to the stack via their ID.
