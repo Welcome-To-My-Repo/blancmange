@@ -1,7 +1,7 @@
 /*
  * The Blancmange Kernel Reference Implementation
  * Author: o_o <yosngne@gmail.com>
- * 
+ *
  * This file is public domain.
 */
 
@@ -15,7 +15,7 @@
 * Blancmange gets its name from a rough homile of the name of its predecessor,
 * Befunge.
 *
-* This header defines a small interpreter for the Blancmange instruction set 
+* This header defines a small interpreter for the Blancmange instruction set
 * designed to be used internally by an arbitrary user interface application.
 */
 
@@ -30,11 +30,10 @@ struct BM_POINTER;
 /*
  * IP holds the position and direction of the instruction pointer
  */
-void ip_i (BM_POINTER P);
 
 struct BM_CPU;
 /*
- * The CPU maintains the registers and operand stack as well as the current 
+ * The CPU maintains the registers and operand stack as well as the current
  * register
  */
 
@@ -61,7 +60,7 @@ int run (int I, int O);
 
 struct BM_POINTER
 {
-	char o;
+	unsigned char o;
 	/*
 	 * 120: x increasing
 	 * 121: y increasing
@@ -81,14 +80,14 @@ struct BM_POINTER
 
 struct BM_CPU
 {
-	char c;
+	void *c;
 	/*
 	 * current register
 	 * 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
 	 */
 
 	unsigned char cr[4];	//byte registers
-	unsigned int ir[6];	//word registers
+	unsigned long long int ir[6];	//word registers
 	long long int ur[6];	//signed word registers
 };
 
@@ -136,11 +135,11 @@ int load (unsigned char* txt, long int l)
 						h[0] -= 87;
 						x = 16 * h[0];
 					}
-					else 
+					else
 					{
 						return BAD_HEX;
 					}
-					
+
 					if (h[1] < 58 && h[1] > 47)
 					{
 						h[1] -= 48;
@@ -177,47 +176,13 @@ int load (unsigned char* txt, long int l)
 	return 0;
 }
 
-void ip_i (BM_POINTER P)
-{
-	switch (P.o)
-	{
-		case '120':
-		{
-			P.x ++;
-			break;
-		}
-		case '121':
-		{
-			P.y ++;
-			break;
-		}
-		case '122':
-		{
-			P.z ++;
-			break;
-		}
-		case '248'
-		{
-			P.x --;
-			break;
-		}
-		case '249':
-		{
-			P.y --;
-			break;
-		}
-		case '250':
-		{
-			P.z --;
-			break;
-		}
 int run (int I, int O)
 {
-	BM_POINTER ip;
-	BM_CPU cpu;
+	struct BM_POINTER ip;
+	struct BM_CPU cpu;
 	unsigned char running = 1;
-	
-	cpu.c = '0';
+	cpu.c = (unsigned char*)&cpu.cr[0];
+
 	ip.x = 0;
 	ip.y = 0;
 	ip.z = 0;
@@ -271,32 +236,32 @@ int run (int I, int O)
 			{
 				switch (ip.o)
                 		{
-                        		case '120':
+                        		case 120:
                         		{
 		                                ip.x ++;
       		                          break;
 					}
-		                        case '121':
+		                        case 121:
 		                        {
 		                                ip.y ++;
 		                                break;
 		                        }
-		                        case '122':
+		                        case 122:
 		                        {
 		                                ip.z ++;
 		                                break;
 		                        }
-		                        case '248':
+		                        case 248:
 		                        {
 		                                ip.x --;
 		                                break;
 		                        }
-		                        case '249':
+		                        case 249:
 		                        {
 		                                ip.y --;
 		                                break;
 		                        }
-		                        case '250':
+		                        case 250:
 		                        {
 		                                ip.z --;
 		                                break;
@@ -312,48 +277,112 @@ int run (int I, int O)
 			}
 			case '0':
 			{
-				cpu.c = '0';
+				cpu.c = (unsigned char*)&cpu.cr[0];
 				break;
 			}
 			case '1':
 			{
-				cpu.c = '1';
+				cpu.c = (unsigned char*)&cpu.cr[1];
 				break;
 			}
 			case '2':
 			{
-				cpu.c = '2';
+				cpu.c = (unsigned char*)&cpu.cr[2];
+				break;
+			}
+			case '3':
+			{
+				cpu.c = (unsigned char*)&cpu.cr[3];
+				break;
+			}
+			case '4':
+			{
+				cpu.c = (unsigned long long int*)&cpu.ir[0];
+				break;
+			}
+			case '5':
+			{
+				cpu.c = (unsigned long long int*)&cpu.ir[1];
+				break;
+			}
+			case '6':
+			{
+				cpu.c = (unsigned long long int*)&cpu.ir[2];
+				break;
+			}
+			case '7':
+			{
+				cpu.c = (unsigned long long int*)&cpu.ir[3];
+				break;
+			}
+			case '8':
+			{
+				cpu.c = (unsigned long long int*)&cpu.ir[4];
+				break;
+			}
+			case '9':
+			{
+				cpu.c = (unsigned long long int*)&cpu.ir[5];
+				break;
+			}
+			case 'A':
+			{
+				cpu.c = (long long int*)&cpu.ur[0];
+				break;
+			}
+			case 'B':
+			{
+				break;
+			}
+			case 'C':
+			{
+				break;
+			}
+			case 'D':
+			{
+				break;
+			}
+			case 'E':
+			{
+				break;
+			}
+			case 'F':
+			{
+				break;
+			}
+			case 'i':
+			{
 				break;
 			}
 		}
 		switch (ip.o)
 		{
-			case '120':
+			case 120:
 			{
 				ip.x ++;
 				break;
 			}
-			case '121':
+			case 121:
 			{
 				ip.y ++;
 				break;
 			}
-			case '122':
+			case 122:
 			{
 				ip.z ++;
 				break;
 			}
-			case '248':
+			case 248:
 			{
 				ip.x --;
 				break;
 			}
-			case '249':
+			case 249:
 			{
 				ip.y --;
 				break;
 			}
-			case '250':
+			case 250:
 			{
 				ip.z --;
 				break;
@@ -362,7 +391,7 @@ int run (int I, int O)
 	}
 	return 0;
 }
-			
-	
+
+
 
 #endif //BLANCMANGE

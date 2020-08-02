@@ -23,16 +23,10 @@ An esoteric language.
 # Register Instructions
 
 * `0123456789ABCDEF` Select Register
-* `s`	shift left
-* `S`	shift right
-* `r`	rotate left
-* `R`	rotate right
-* `f`	flip first bit
-* `j`	flip last bit
 * `i`	increment
 * `d`	decrement
-* `k`	set register to the byte after this instruction
-* `K`	set register to the word after this instruction
+* `r`	set register to the byte after this instruction
+* `R`	set register to the word after this instruction
 * `"`	set r1-r3 to current coordinates
 * `P`	Push register to stack
 
@@ -98,7 +92,7 @@ A Blancmange source file divides the three dimensions of instructions into indiv
 Each two dimensional plane has an X and Y axis with 256x256x1 dimensions.
 Multiple planes of instructions are listed in descending order in a source file corresponding to increasing Z-axis coordinates.
 
-Both the source file and cube are oriented so that the zero origin of all three axis occurs in the upper left corner. 
+Both the source file and cube are oriented so that the zero origin of all three axis occurs in the upper left corner.
 Source code represents a view of the cube looking up from the bottom towards higher Z-axis coordinates.
 Each character to the right increases in the x-axis.
 Each line downward increases in the y-axis.
@@ -161,4 +155,4 @@ Registers are pushed to the stack via their ID.
 Stack instructions consume register ID's from the stack to determine which registers they operate on.
 Each instruction will pop y, then x and will perform an operation of x by y (as in x / y or x + y).
 
-# 
+#
