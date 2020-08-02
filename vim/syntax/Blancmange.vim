@@ -1,59 +1,22 @@
-" Blancmange Syntax File
+" Alchemist Syntax File
 " Maintainer: o_o
 if exists("b:current_syntax")
     finish
 endif
 
-syntax match PC "\v\."
-syntax match PC "\v\,"
-syntax match PC "\v\^"
-syntax match PC "\v\v"
-syntax match PC "\v\<"
-syntax match PC "\v\>"
-syntax match PC "\v\@"
-syntax match PC "\v\#"
-hi link PC Statement
+syntax match C "\v~"
 
-syn match rOp "\v\l"
-syn match rOp "\v\L"
-syn match rOp "\v\r"
-syn match rOp "\v\R"
-syn match rOp "\v\f"
-syn match rOp "\v\j"
-syn match rOp "\v\""
-syn match rOp "\v\P"
-hi link rOp string
+syn match pc "\<|\>|\^|v"
+hi link pc Include
 
-syn match Op "\v\p"
-syn match Op "\v\d"
-syn match Op "\v\s"
-syn match Op "\v\&"
-syn match Op "\v\o"
-syn match Op "\v\!"
-syn match Op "\v\+"
-syn match Op "\v\-"
-syn match Op "\v\*"
-syn match Op "\v\/"
-syn match Op "\v\%"
-hi link Op Operator
+hi link C Comment
 
-syn match Cmp "\v\g"
-syn match Cmp "\v\l"
-syn match Cmp "\v\="
-hi link Cmp Identifier
+hi link P Operator
 
-syn match Con "\v\?"
-hi link Con Type
+syn match Goto "\v\@"
+hi link Goto Tag
 
-syn match IO "\v\["
-syn match IO "\v\]"
-syn match IO "\v\("
-syn match IO "\v\)"
-hi link IO Type
-
-syn match Syn "\v\{|\}|\;"
-hi link Syn Include
-
-hi link Error Error
+syn match Reg "[\x]"
+hi link Reg Identifier
 
 let b:current_syntax = "Alchemist"

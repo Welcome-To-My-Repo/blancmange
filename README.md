@@ -5,29 +5,32 @@ An esoteric language.
 
 ---
 
-# Instruction Pointer Instructions
+# Program Counter Instructions
 
 * ` `	no operation
 * `.`	move forward
 * `,`	move backward
-* `^`	Rotate up
-* `v`	Rotate down
+* `^`	rotate up
+* `v`	rotate down
 * `<`	rotate left
 * `>`	rotate right
 * `@`	unconditional jump using r1-r3 for coordinates
 * `#`	unconditional bridge
+* `Q`	end program
 
 ---
 
 # Register Instructions
 
 * `0123456789ABCDEF` Select Register
-* `l`	shift left
-* `r`	shift right
-* `L`	rotate left
+* `s`	shift left
+* `S`	shift right
+* `r`	rotate left
 * `R`	rotate right
 * `f`	flip first bit
 * `j`	flip last bit
+* `i`	increment
+* `d`	decrement
 * `"`	set r1-r3 to current coordinates
 * `P`	Push register to stack
 
@@ -36,10 +39,11 @@ An esoteric language.
 # Register Operation Stack Instructions
 
 * `p`	pop from stack
-* `d`	duplicate top
-* `s`	sWitch two top
+* `c`	duplicate top
+* `s`	sWitch top with below
 * `&`	binary AND
-* `o`	binary OR
+* `|`	binary OR
+* `_`	binary XOR
 * `!`	binary NOT
 * `+`	addition
 * `-`	subtraction
@@ -51,9 +55,9 @@ An esoteric language.
 
 # Flag Register Instructions
 
-* `g`	greater than, set r0 to 1
-* `l`	less than, set r0 to 1
-* `=`	if equal, set r0 to 1
+* `g`	greater than, set r0 to 255
+* `l`	less than, set r0 to 255
+* `=`	if equal, set r0 to 255
 * `?`	if r0 is 0, skip next instruction
 
 ---
@@ -64,6 +68,8 @@ An esoteric language.
 * `]`	writes byte from r0 to coordinates in r1-r3
 * `(`	reads word from coordinates in r1-r3 and sets r4 with it
 * `)`	writes word from r4 to coordinates in r1-r3
+* `I`	Read in a byte from default stream into r0
+* `O`	Write a byte to the default stream from r0
 
 ---
 
@@ -90,18 +96,24 @@ An esoteric language.
 # Blancmange Source Format
 
 Blancmange executes code in a three dimensional tesseract.
-The dimensions of the cube are 256^3 bytes.
+The dimensions of the tesseract cube are 256^3 bytes.
+The tesseract allows the Program Counter to iterate past the bounds of the cube and continue by entering on the opposite face from its exit point.
 
-source code is formatted as 256 individual 256x256 planes of x and y coordinates
-each plane added to the source represents a new plane further along the z coordinate.
-All three coordinates begin at zero.
-Each character across increases x.
-Each line increases y.
-Each additional plane increases z.
+The source code is formatted as 256 individual 256x256 planes of x and y coordinates.
+Each plane added to the source represents a new plane further along the z coordinate.
+
+All three coordinates begin at zero in the bottom left back corner of the cube.
+Each character to the right increases in the x-axis.
+Each line downward increases in the y-axis.
+Each additional plane increases in the z-axis.
+
+The Program Counter will move along a path that matches the visual representation of the source code.
+The source code is oriented so that it represents a view of the cube from its bottom, facing towards higher Z coordinates with X and Y coordinates increasing to the bottom right of the text.
 
 * `{`	begin a new 256x256 plane on the next line
 * `;`	end a line before 256 chatacters
 * `}`	end a plane before 256 lines
+* `~`	surrounds comments
 
 ---
 
