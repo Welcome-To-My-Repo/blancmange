@@ -1,6 +1,8 @@
 /*
-* This source code is authored by o_o <yosngne@gmail.com> and is public domain.
-* Use at your own risk and enjoy.
+ * The Blancmange Kernel Reference Implementation
+ * Author: o_o <yosngne@gmail.com>
+ * 
+ * This file is public domain.
 */
 
 #ifndef BLANCMANGE
@@ -14,7 +16,7 @@
 * Befunge.
 *
 * This header defines a small interpreter for the Blancmange instruction set 
-* designed to be used internally by a larger environment for the language.
+* designed to be used internally by an arbitrary user interface application.
 */
 
 static unsigned char T [256][256][256];
@@ -25,19 +27,16 @@ static unsigned char T [256][256][256];
 
 
 struct BM_POINTER;
-struct BM_POINTER ip;
 /*
  * IP holds the position and direction of the instruction pointer
  */
-
+void ip_i (BM_POINTER P);
 
 struct BM_CPU;
-struct BM_CPU cpu;
 /*
  * The CPU maintains the registers and operand stack as well as the current 
  * register
  */
-
 
 int load (unsigned char *txt, long int l);
 /*
@@ -45,9 +44,13 @@ int load (unsigned char *txt, long int l);
  */
 
 
-int run ();
+int run (int I, int O);
 /*
- * executes the instructions
+ * executes the loaded instructions.
+ * I is the file descriptor for the default input.
+ * O is the file descriptor for the default output.
+ * It's usually a good choice for Unix/Linux to enter zero for I and one for O.
+ *
  */
 
 /*
@@ -55,7 +58,6 @@ int run ();
  */
 
 #define BAD_HEX 1
-
 
 struct BM_POINTER
 {
@@ -76,6 +78,7 @@ struct BM_POINTER
 	 * Holds current coordinates
 	 */
 };
+
 struct BM_CPU
 {
 	char c;
@@ -99,17 +102,17 @@ int load (unsigned char* txt, long int l)
 			continue;
 		switch (txt[i])
 		{
-			case '{':
+			case '{':	//Starting a new plane
 				{
 					z++;
 					break;
 				}
-			case ';':
+			case ';':	//starting a new line
 				{
 					y++;
 					break;
 				}
-			case '\\':
+			case '\\':	//encoded raw byte
 				{
 					unsigned char h[2];
 					unsigned char x = 0;
@@ -117,7 +120,7 @@ int load (unsigned char* txt, long int l)
 					h[0] = txt[i];
 					i++;
 					h[1] = txt[i];
-
+					//convert two digit hex to a byte
 					if (h[0] < 58 && h[0] > 47)
 					{
 						h[0] -= 48;
@@ -174,5 +177,192 @@ int load (unsigned char* txt, long int l)
 	return 0;
 }
 
+void ip_i (BM_POINTER P)
+{
+	switch (P.o)
+	{
+		case '120':
+		{
+			P.x ++;
+			break;
+		}
+		case '121':
+		{
+			P.y ++;
+			break;
+		}
+		case '122':
+		{
+			P.z ++;
+			break;
+		}
+		case '248'
+		{
+			P.x --;
+			break;
+		}
+		case '249':
+		{
+			P.y --;
+			break;
+		}
+		case '250':
+		{
+			P.z --;
+			break;
+		}
+int run (int I, int O)
+{
+	BM_POINTER ip;
+	BM_CPU cpu;
+	unsigned char running = 1;
+	
+	cpu.c = '0';
+	ip.x = 0;
+	ip.y = 0;
+	ip.z = 0;
+	ip.o = 'x';
+	while (running)
+	{
+		switch (T[ip.x][ip.y][ip.z])
+		{
+			case ' ':
+			{
+				break;
+			}
+			case '.':
+			{
+				ip.o = 122;
+				break;
+			}
+			case ',':
+			{
+				ip.o = 250;
+				break;
+			}
+			case '^':
+			{
+				ip.o = 121;
+				break;
+			}
+			case 'v':
+			{
+				ip.o = 249;
+				break;
+			}
+			case '>':
+			{
+				ip.o = 120;
+				break;
+			}
+			case '<':
+			{
+				ip.o = 248;
+				break;
+			}
+			case '@':
+			{
+				ip.x = cpu.cr[1];
+				ip.y = cpu.cr[2];
+				ip.z = cpu.cr[3];
+				break;
+			}
+			case '#':
+			{
+				switch (ip.o)
+                		{
+                        		case '120':
+                        		{
+		                                ip.x ++;
+      		                          break;
+					}
+		                        case '121':
+		                        {
+		                                ip.y ++;
+		                                break;
+		                        }
+		                        case '122':
+		                        {
+		                                ip.z ++;
+		                                break;
+		                        }
+		                        case '248':
+		                        {
+		                                ip.x --;
+		                                break;
+		                        }
+		                        case '249':
+		                        {
+		                                ip.y --;
+		                                break;
+		                        }
+		                        case '250':
+		                        {
+		                                ip.z --;
+		                                break;
+		                        }
+				}
+				break;
+			}
+			case 'Q':
+			{
+				running = 0;
+				continue;
+				break;
+			}
+			case '0':
+			{
+				cpu.c = '0';
+				break;
+			}
+			case '1':
+			{
+				cpu.c = '1';
+				break;
+			}
+			case '2':
+			{
+				cpu.c = '2';
+				break;
+			}
+		}
+		switch (ip.o)
+		{
+			case '120':
+			{
+				ip.x ++;
+				break;
+			}
+			case '121':
+			{
+				ip.y ++;
+				break;
+			}
+			case '122':
+			{
+				ip.z ++;
+				break;
+			}
+			case '248':
+			{
+				ip.x --;
+				break;
+			}
+			case '249':
+			{
+				ip.y --;
+				break;
+			}
+			case '250':
+			{
+				ip.z --;
+				break;
+			}
+		}
+	}
+	return 0;
+}
+			
+	
 
 #endif //BLANCMANGE
