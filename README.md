@@ -26,6 +26,7 @@ An esoteric language.
 * `i`	increment
 * `d`	decrement
 * `r`	set register to the byte after this instruction
+* `R`	set register to the word after this instruction
 * `"`	set r1-r3 to current coordinates
 * `P`	Push register to stack
 
@@ -35,7 +36,7 @@ An esoteric language.
 
 * `p`	pop from stack and set the current register to the value in the popped register.
 * `c`	duplicate top
-* `u`	sWitch top with below
+* `u`	switch top with below
 * `&`	binary AND
 * `|`	binary OR
 * `_`	binary XOR

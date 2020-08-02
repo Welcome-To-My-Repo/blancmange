@@ -58,6 +58,8 @@ int run (int I, int O);
 
 #define BAD_HEX 1
 #define EMPTY_STACK 2
+#define NOT_ENOUGH_STACK 3
+#define FULL_STACK 4
 
 struct BM_POINTER
 {
@@ -81,15 +83,15 @@ struct BM_POINTER
 
 struct BM_CPU
 {
-	long long int *c;
+	unsigned long long int *c;
 	/*
 	 * current register
 	 * 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
 	 */
-	long long int r[16];
+	unsigned long long int r[16];
 
 	unsigned char p;
-	void *s[256];
+	unsigned long long int *s[256];
 };
 
 int load (unsigned char* txt, long int l)
@@ -182,9 +184,7 @@ int run (int I, int O)
 	struct BM_POINTER ip;
 	struct BM_CPU cpu;
 	unsigned char running = 1;
-	cpu.c = (unsigned char*)&cpu.cr[0];
-	cpu.t = 'b';
-	cpu.p = 0;
+	cpu.c = &cpu.r[0];
 
 	ip.x = 0;
 	ip.y = 0;
@@ -230,9 +230,9 @@ int run (int I, int O)
 			}
 			case '@':
 			{
-				ip.x = cpu.cr[1];
-				ip.y = cpu.cr[2];
-				ip.z = cpu.cr[3];
+				ip.x = cpu.r[1];
+				ip.y = cpu.r[2];
+				ip.z = cpu.r[3];
 				break;
 			}
 			case '#':
@@ -280,80 +280,216 @@ int run (int I, int O)
 			}
 			case '0':
 			{
+				cpu.c = &cpu.r[0];
 				break;
 			}
 			case '1':
 			{
+				cpu.c = &cpu.r[1];
 				break;
 			}
 			case '2':
 			{
+				cpu.c = &cpu.r[2];
 				break;
 			}
 			case '3':
 			{
+				cpu.c = &cpu.r[3];
 				break;
 			}
 			case '4':
 			{
+				cpu.c = &cpu.r[4];
 				break;
 			}
 			case '5':
 			{
+				cpu.c = &cpu.r[5];
 				break;
 			}
 			case '6':
 			{
+				cpu.c = &cpu.r[6];
 				break;
 			}
 			case '7':
 			{
+				cpu.c = &cpu.r[7];
 				break;
 			}
 			case '8':
 			{
+				cpu.c = &cpu.r[8];
 				break;
 			}
 			case '9':
 			{
+				cpu.c = &cpu.r[9];
 				break;
 			}
 			case 'A':
 			{
+				cpu.c = &cpu.r[10];
 				break;
 			}
 			case 'B':
 			{
+				cpu.c = &cpu.r[11];
 				break;
 			}
 			case 'C':
 			{
+				cpu.c = &cpu.r[12];
 				break;
 			}
 			case 'D':
 			{
+				cpu.c = &cpu.r[13];
 				break;
 			}
 			case 'E':
 			{
+				cpu.c = &cpu.r[14];
 				break;
 			}
 			case 'F':
 			{
+				cpu.c = &cpu.r[15];
 				break;
 			}
 			case 'i':
 			{
-
+				*cpu.c ++;
+				break;
 			}
 			case 'd':
 			{
+				*cpu.c --;
 				break;
 			}
 			case 'r':
 			{
+				switch (ip.o)
+				{
+					case 120:
+					{
+						ip.x ++;
+						break;
+					}
+					case 121:
+					{
+						ip.y ++;
+						break;
+					}
+					case 122:
+					{
+						ip.z ++;
+						break;
+					}
+					case 248:
+					{
+						ip.x --;
+						break;
+					}
+					case 249:
+					{
+						ip.y --;
+						break;
+					}
+					case 250:
+					{
+						ip.z --;
+						break;
+					}
+				}
+				*cpu.c = T[ip.x][ip.y][ip.z];
 				break;
 			}
+			case 'R':
+			{
+				for (int i = 0; i < 8; i ++)
+				{
+					switch (ip.o)
+					{
+						case 120:
+						{
+							ip.x ++;
+							break;
+						}
+						case 121:
+						{
+							ip.y ++;
+							break;
+						}
+						case 122:
+						{
+							ip.z ++;
+							break;
+						}
+						case 248:
+						{
+							ip.x --;
+							break;
+						}
+						case 249:
+						{
+							ip.y --;
+							break;
+						}
+						case 250:
+						{
+							ip.z --;
+							break;
+						}
+					}
+					*cpu.c = T[ip.x][ip.y][ip.z] << (i * 8);
+				}
+				break;
+			}
+			case '"':
+			{
+				r[1] = ip.x;
+				r[2] = ip.y;
+				r[3] = ip.z;
+				break;
+			}
+			case 'P':
+			{
+				p ++;
+				s[p] = c;
+				break;
+			}
+			case 'p':
+			{
+				*c = *s[p];
+				s[p] = 0;
+				if (p < 0)
+					p --;
+				break;
+			}
+			case 'c':
+			{
+				if (p == 255)
+					return FULL_STACK;
+				s[p + 1] = s[p];
+				p++;
+				break;
+			}
+			case 'u':
+			{
+				unsigned long long int t = s[p];
+				if (p == 0)
+					return NOT_ENOUGH_STACK
+				s[p] = s[p - 1];
+				s[p - 1] = t;
+				break;
+			}
+			case '&':
+			{
+				break;
+			}
+
 		}
 		switch (ip.o)
 		{
