@@ -1,22 +1,34 @@
-" Alchemist Syntax File
+" Blancmange Syntax File
 " Maintainer: o_o
 if exists("b:current_syntax")
     finish
 endif
 
-syntax match C "\v~"
-
-syn match pc "\<|\>|\^|v"
-hi link pc Include
-
+syn match C "\~.*\~"
 hi link C Comment
 
-hi link P Operator
+syn match S "[{|}|;]"
+hi link S Error
 
-syn match Goto "\v\@"
-hi link Goto Tag
+syn match PC "[>|<|\^|v|\.|@|#|Q]"
+hi link PC Type
 
-syn match Reg "[\x]"
-hi link Reg Identifier
+syn match Reg "[0-9|A-F]"
+hi link Reg Function
 
-let b:current_syntax = "Alchemist"
+syn match RI "[s|S|r|R|f|j|i|d|\"|P]"
+hi link RI Constant
+
+syn match Math "[p|c|u|&|\||!|+|-|_|\*|\/|%]"
+hi link Math Statement
+
+syn match Cmp "[g|l|=|\?|]"
+hi link Cmp Identifier
+
+syn match IO "[\[|\]|\(|\)|I|O]"
+hi link IO Operator
+
+syn match Sys "Y"
+hi link Sys Special
+
+let b:current_syntax = "Blancmange"

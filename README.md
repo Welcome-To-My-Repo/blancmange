@@ -40,7 +40,7 @@ An esoteric language.
 
 * `p`	pop from stack
 * `c`	duplicate top
-* `s`	sWitch top with below
+* `u`	sWitch top with below
 * `&`	binary AND
 * `|`	binary OR
 * `_`	binary XOR
@@ -73,23 +73,9 @@ An esoteric language.
 
 ---
 
-# Buffer Instructions
-
-* `M`	Creates new buffer with size taken from r4. Sets r4 with the buffer address.
-* `m`	Frees buffer at address in r4
-* `w`	reads word from buffer located in r4 at offset in r5 to r6
-* `W`	writes word in r6 at offset in r5 at buffer located in r4
-* `b`	reads byte from buffer located in r4 at offset in r5 to r0
-* `B`	writes byte in r1 at offset in r5 at buffer located in r4
-* `x`	sets buffer located at r4 to be executable
-* `z`	sets buffer located at r4 to be read/write-able
-* `E`	Executes buffer located at r4
-
----
-
 # System Interface
 
-* `S`	Calls Kernel using r4-r9 for parameters. Return value is placed in r4.
+* `Y`	Calls Kernel using r4-r9 for parameters. Return value is placed in r4.
 
 ---
 

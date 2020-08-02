@@ -1,21 +1,21 @@
 {
->;~ A Blancmange Hello World ~
-<1Pd2Pd3Pd___fv;
+	>;~ A Blancmange Hello World ~
+	<1Pd2Pd3Pd___fv~Zero all the byte registers~;
+	             ~^Down to next plane.~;
+{
+	Hello, world!~This is the string.~; 
 }
 {
-Hello, world!;
-}
-{
-;
-<             v;
-4;
-f;
-s;
-f;
-s;
-s;
-f;
-5;
-<#>5P4Pl0!?Q[O3i>;
-  >             >;
+	;
+	<             v~Execution picks up on the third plane~;
+	4~Set 4 to the number of loops (13 characters in the string)~;
+	f;
+	s;
+	f;
+	s;
+	s;
+	f;
+	5;
+	<#>5P4Pl0!?Q[O3i>;
+	  >             >;
 }
