@@ -19,8 +19,19 @@
 
 static unsigned char TESSERACT [256][256][256];
 
-struct BM_POINTER typedef POINTER;	//the Instruction Pointer
-struct BM_CPU typedef CPU;		//The register and operand stack
+struct BM_POINTER typedef POINTER;
+struct BM_CPU typedef CPU;
+int load (unsigned char *txt);
+int run ();
+
+struct BM_POINTER
+{
+	char orientation;
+	unsigned char
+		x,
+		y,
+		z;
+};
 
 
 #endif //BLANCMANGE
