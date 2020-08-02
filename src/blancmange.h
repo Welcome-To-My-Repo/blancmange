@@ -57,6 +57,7 @@ int run (int I, int O);
  */
 
 #define BAD_HEX 1
+#define EMPTY_STACK 2
 
 struct BM_POINTER
 {
@@ -80,15 +81,15 @@ struct BM_POINTER
 
 struct BM_CPU
 {
-	void *c;
+	long long int *c;
 	/*
 	 * current register
 	 * 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
 	 */
+	long long int r[16];
 
-	unsigned char cr[4];	//byte registers
-	unsigned long long int ir[6];	//word registers
-	long long int ur[6];	//signed word registers
+	unsigned char p;
+	void *s[256];
 };
 
 int load (unsigned char* txt, long int l)
@@ -182,6 +183,8 @@ int run (int I, int O)
 	struct BM_CPU cpu;
 	unsigned char running = 1;
 	cpu.c = (unsigned char*)&cpu.cr[0];
+	cpu.t = 'b';
+	cpu.p = 0;
 
 	ip.x = 0;
 	ip.y = 0;
@@ -277,57 +280,46 @@ int run (int I, int O)
 			}
 			case '0':
 			{
-				cpu.c = (unsigned char*)&cpu.cr[0];
 				break;
 			}
 			case '1':
 			{
-				cpu.c = (unsigned char*)&cpu.cr[1];
 				break;
 			}
 			case '2':
 			{
-				cpu.c = (unsigned char*)&cpu.cr[2];
 				break;
 			}
 			case '3':
 			{
-				cpu.c = (unsigned char*)&cpu.cr[3];
 				break;
 			}
 			case '4':
 			{
-				cpu.c = (unsigned long long int*)&cpu.ir[0];
 				break;
 			}
 			case '5':
 			{
-				cpu.c = (unsigned long long int*)&cpu.ir[1];
 				break;
 			}
 			case '6':
 			{
-				cpu.c = (unsigned long long int*)&cpu.ir[2];
 				break;
 			}
 			case '7':
 			{
-				cpu.c = (unsigned long long int*)&cpu.ir[3];
 				break;
 			}
 			case '8':
 			{
-				cpu.c = (unsigned long long int*)&cpu.ir[4];
 				break;
 			}
 			case '9':
 			{
-				cpu.c = (unsigned long long int*)&cpu.ir[5];
 				break;
 			}
 			case 'A':
 			{
-				cpu.c = (long long int*)&cpu.ur[0];
 				break;
 			}
 			case 'B':
@@ -351,6 +343,14 @@ int run (int I, int O)
 				break;
 			}
 			case 'i':
+			{
+
+			}
+			case 'd':
+			{
+				break;
+			}
+			case 'r':
 			{
 				break;
 			}
