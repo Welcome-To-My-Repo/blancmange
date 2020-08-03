@@ -52,6 +52,9 @@ int run (int I, int O);
  *
  */
 
+void (*txt[256])();
+
+
 /*
  * Errors
  */
@@ -80,6 +83,7 @@ struct BM_POINTER
 	 * Holds current coordinates
 	 */
 };
+BM_POINTER ip;
 
 struct BM_CPU
 {
@@ -94,10 +98,130 @@ struct BM_CPU
 	unsigned long long int *s[256];
 };
 
+BM_CPU cpu;
+
+void INC_Z ();
+void DEC_Z ();
+void INC_Y ();
+void DEC_Y ();
+void INC_X ();
+void DEC_X ();
+void JUMP ();
+void BRIDGE ();
+void END ();
+
+void R0 ();
+void R1 ();
+void R2 ();
+void R3 ();
+void R4 ();
+void R5 ();
+void R6 ();
+void R7 ();
+void R8 ();
+void R9 ();
+void RA ();
+void RB ();
+void RC ();
+void RD ();
+void RE ();
+void RF ();
+
+void INC_R ();
+void DEC_R ();
+void SET_R_B ();
+void SET_R_W ();
+void SET_COORD ();
+void PUSH_R ();
+
+void POP_R ();
+void DUP_STACK ();
+void SWITCH_STACK ();
+void AND ();
+void OR ();
+void NOT ();
+void XOR ();
+void ADD ();
+void SUB ();
+void MUL ();
+void DIV ();
+void MOD ();
+
+void GT ();
+void LT ();
+void EQL ();
+void COND ();
+void BR_X ();
+void BR_Y ();
+void BR_Z ();
+
+void RD_B_COORD ();
+void WR_B_COORD ();
+void RD_W_COORD ();
+void WR_W_COORD ();
+void ISTREAM ();
+void OSTREAM ();
+void RD_B_MEM ();
+void WR_B_MEM ();
+void RD_W_MEM ();
+void WR_W_MEM ();
+
+void SYS ();
+
 int load (unsigned char* txt, long int l)
 {
 	unsigned char x = 0, y = 0, z = 0;
 	long int i;
+	txt['.'] = INC_Z;
+	txt[','] = DEC_Z;
+	txt['^'] = INC_Y;
+	txt['v'] = DEC_Y;
+	txt['>'] = INC_X;
+	txt['<'] = DEC_X;
+	txt['@'] = JUMP;
+	txt['#'] = BRIDGE;
+	txt['Q'] = END;
+	txt['0'] = R0;
+	txt['1'] = R1;
+	txt['2'] = R2;
+	txt['3'] = R3;
+	txt['4'] = R4;
+	txt['5'] = R5;
+	txt['6'] = R6;
+	txt['7'] = R7;
+	txt['8'] = R8;
+	txt['9'] = R9;
+	txt['A'] = RA;
+	txt['B'] = RB;
+	txt['C'] = RC;
+	txt['D'] = RD;
+	txt['E'] = RE;
+	txt['F'] = RF;
+	txt['i'] = INC_R;
+	txt['d'] = DEC_R;
+	txt['r'] = SET_R_B;
+	txt['R'] = SET_R_W;
+	txt['"'] = SET_COORD;
+	txt['P'] = PUSH_R;
+	txt['p'] = POP_R;
+	txt['c'] = DUP_STACK;
+	txt['u'] = SWITCH_STACK;
+	txt['&'] = AND;
+	txt['|'] = OR;
+	txt['!'] = NOT;
+	txt['+'] = ADD;
+	txt['-'] = SUB;
+	txt['*'] = MUL;
+	txt['/'] = DIV;
+	txt['%'] = MOD;
+	txt['g'] = GT;
+	txt['l'] = LT;
+	txt['='] = EQL;
+	txt['?'] = COND;
+	txt['b'] = BR_X;
+	txt['B'] = BR_Y;
+	txt['Z'] = BR_Z;
+
 	for (int i = 0; i < l; i ++)
 	{
 		if (txt[i] < 32 || txt[i] > 126)
@@ -192,305 +316,6 @@ int run (int I, int O)
 	ip.o = 'x';
 	while (running)
 	{
-		switch (T[ip.x][ip.y][ip.z])
-		{
-			case ' ':
-			{
-				break;
-			}
-			case '.':
-			{
-				ip.o = 122;
-				break;
-			}
-			case ',':
-			{
-				ip.o = 250;
-				break;
-			}
-			case '^':
-			{
-				ip.o = 121;
-				break;
-			}
-			case 'v':
-			{
-				ip.o = 249;
-				break;
-			}
-			case '>':
-			{
-				ip.o = 120;
-				break;
-			}
-			case '<':
-			{
-				ip.o = 248;
-				break;
-			}
-			case '@':
-			{
-				ip.x = cpu.r[1];
-				ip.y = cpu.r[2];
-				ip.z = cpu.r[3];
-				break;
-			}
-			case '#':
-			{
-				switch (ip.o)
-                		{
-                        		case 120:
-                        		{
-		                                ip.x ++;
-      		                          break;
-					}
-		                        case 121:
-		                        {
-		                                ip.y ++;
-		                                break;
-		                        }
-		                        case 122:
-		                        {
-		                                ip.z ++;
-		                                break;
-		                        }
-		                        case 248:
-		                        {
-		                                ip.x --;
-		                                break;
-		                        }
-		                        case 249:
-		                        {
-		                                ip.y --;
-		                                break;
-		                        }
-		                        case 250:
-		                        {
-		                                ip.z --;
-		                                break;
-		                        }
-				}
-				break;
-			}
-			case 'Q':
-			{
-				running = 0;
-				continue;
-				break;
-			}
-			case '0':
-			{
-				cpu.c = &cpu.r[0];
-				break;
-			}
-			case '1':
-			{
-				cpu.c = &cpu.r[1];
-				break;
-			}
-			case '2':
-			{
-				cpu.c = &cpu.r[2];
-				break;
-			}
-			case '3':
-			{
-				cpu.c = &cpu.r[3];
-				break;
-			}
-			case '4':
-			{
-				cpu.c = &cpu.r[4];
-				break;
-			}
-			case '5':
-			{
-				cpu.c = &cpu.r[5];
-				break;
-			}
-			case '6':
-			{
-				cpu.c = &cpu.r[6];
-				break;
-			}
-			case '7':
-			{
-				cpu.c = &cpu.r[7];
-				break;
-			}
-			case '8':
-			{
-				cpu.c = &cpu.r[8];
-				break;
-			}
-			case '9':
-			{
-				cpu.c = &cpu.r[9];
-				break;
-			}
-			case 'A':
-			{
-				cpu.c = &cpu.r[10];
-				break;
-			}
-			case 'B':
-			{
-				cpu.c = &cpu.r[11];
-				break;
-			}
-			case 'C':
-			{
-				cpu.c = &cpu.r[12];
-				break;
-			}
-			case 'D':
-			{
-				cpu.c = &cpu.r[13];
-				break;
-			}
-			case 'E':
-			{
-				cpu.c = &cpu.r[14];
-				break;
-			}
-			case 'F':
-			{
-				cpu.c = &cpu.r[15];
-				break;
-			}
-			case 'i':
-			{
-				*cpu.c ++;
-				break;
-			}
-			case 'd':
-			{
-				*cpu.c --;
-				break;
-			}
-			case 'r':
-			{
-				switch (ip.o)
-				{
-					case 120:
-					{
-						ip.x ++;
-						break;
-					}
-					case 121:
-					{
-						ip.y ++;
-						break;
-					}
-					case 122:
-					{
-						ip.z ++;
-						break;
-					}
-					case 248:
-					{
-						ip.x --;
-						break;
-					}
-					case 249:
-					{
-						ip.y --;
-						break;
-					}
-					case 250:
-					{
-						ip.z --;
-						break;
-					}
-				}
-				*cpu.c = T[ip.x][ip.y][ip.z];
-				break;
-			}
-			case 'R':
-			{
-				for (int i = 0; i < 8; i ++)
-				{
-					switch (ip.o)
-					{
-						case 120:
-						{
-							ip.x ++;
-							break;
-						}
-						case 121:
-						{
-							ip.y ++;
-							break;
-						}
-						case 122:
-						{
-							ip.z ++;
-							break;
-						}
-						case 248:
-						{
-							ip.x --;
-							break;
-						}
-						case 249:
-						{
-							ip.y --;
-							break;
-						}
-						case 250:
-						{
-							ip.z --;
-							break;
-						}
-					}
-					*cpu.c = T[ip.x][ip.y][ip.z] << (i * 8);
-				}
-				break;
-			}
-			case '"':
-			{
-				r[1] = ip.x;
-				r[2] = ip.y;
-				r[3] = ip.z;
-				break;
-			}
-			case 'P':
-			{
-				p ++;
-				s[p] = c;
-				break;
-			}
-			case 'p':
-			{
-				*c = *s[p];
-				s[p] = 0;
-				if (p < 0)
-					p --;
-				break;
-			}
-			case 'c':
-			{
-				if (p == 255)
-					return FULL_STACK;
-				s[p + 1] = s[p];
-				p++;
-				break;
-			}
-			case 'u':
-			{
-				unsigned long long int t = s[p];
-				if (p == 0)
-					return NOT_ENOUGH_STACK
-				s[p] = s[p - 1];
-				s[p - 1] = t;
-				break;
-			}
-			case '&':
-			{
-				break;
-			}
-
-		}
 		switch (ip.o)
 		{
 			case 120:
