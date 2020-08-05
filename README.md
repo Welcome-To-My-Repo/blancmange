@@ -1,14 +1,15 @@
 Blancmange
 ===
 
-An esoteric language.
+A three dimensional esoteric RISC.
 
 ---
 
 # Instruction Pointer Instructions
 
 * ` `	no operation
-* `.`	Increase on Z-axis
+* `.`	no operation
+* `'`	Increase on Z-axis
 * `,`	Decrease on Z-axis
 * `^`	Increase on Y-axis
 * `v`	Decrease on Y-axis
@@ -25,6 +26,9 @@ An esoteric language.
 * `0123456789ABCDEF` Select Register
 * `i`	increment
 * `d`	decrement
+* `s`	shift left 1 bit
+* `S`	shift right 1 bit
+* `f`	flip first bit
 * `r`	set register to the byte after this instruction
 * `R`	set register to the word after this instruction
 * `"`	set r1-r3 to current coordinates
@@ -37,6 +41,9 @@ An esoteric language.
 * `p`	pop from stack and set the current register to the value in the popped register.
 * `c`	duplicate top
 * `u`	switch top with below
+
+## Stack Math Instructions
+
 * `&`	binary AND
 * `|`	binary OR
 * `_`	binary XOR
@@ -51,9 +58,9 @@ An esoteric language.
 
 # Flag Register Instructions
 
-* `g`	greater than, set r0 to 255
-* `l`	less than, set r0 to 255
-* `=`	if equal, set r0 to 255
+* `g`	greater than, set r0 to max
+* `l`	less than, set r0 to max
+* `=`	if equal, set r0 to max
 * `?`	if r0 is 0, skip next instruction
 * `b`	if r0 is 0, emulate `<` otherwise emulate `>`
 * `B`	if r0 is 0, emulate `v` otherwise emulate `^`
@@ -69,10 +76,8 @@ An esoteric language.
 * `)`	writes word from r4 to coordinates in r1-r3
 * `I`	Read in a byte from default stream into r0
 * `O`	Write a byte to the default stream from r0
-* `w`	Write byte from r0 to memory address r5 plus offset r6
-* `W`	write word from r4 to memory address r5 plus offset r6
-* `j`	read byte from memory address r5 plus offset r6 to r0
-* `J`	read word from memory address r5 plus offser r6 to r4
+* `m`	Read byte from memory address r4 plus offset r5 to r0
+* `M`	Write byte from r0 to memory address r4 plus offset r6
 
 ---
 
@@ -139,9 +144,7 @@ Each new plane increases on the Z-axis.
 # Blancmange Registers
 
 There are sixteen registers in Blamcmange.
-Registers 0-3 are unsigned 8bit.
-Registers 4-9 are unsigned 64bit.
-Registers A-F are signed 64bit.
+Each register is 64bit unsigned.
 r0 doubles as a flag register for comparisons.
 A register can be selected as the current register.
 Register instructions operate on the current register.
@@ -150,9 +153,10 @@ Register instructions operate on the current register.
 
 # The Operand Stack
 
-Operations that use two registers use the register stack.
-Registers are pushed to the stack via their ID.
-Stack instructions consume register ID's from the stack to determine which registers they operate on.
-Each instruction will pop y, then x and will perform an operation of x by y (as in x / y or x + y).
+Operstions are performed on registers using a stack.
+Register ID's are pushed onto the stack and are popped by operators.
+Operators will use the ID's to determine which registers to operate on.
+All Operators except for *pop* and *duplicate* require two operands.
 
-#
+Mathematical Operators all require two operands.
+Operators will pop y, then pop x, then push x with the result.
