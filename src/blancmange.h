@@ -88,15 +88,15 @@ struct BM_POINTER ip;
 
 struct BM_CPU
 {
-	uint64_t *c;
+	unsigned long long int *c;
 	/*
 	 * current register
 	 * 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
 	 */
-	uint64_t r[16];
+	unsigned long long int r[16];
 
 	unsigned char p;
-	uint64_t *s[256];
+	unsigned long long int *s[256];
 };
 struct BM_CPU cpu;
 
@@ -394,7 +394,7 @@ void SET_R_B () {
 }
 void SET_R_W () {
 	(*cpu.c) = 0;
-	uint64_t tmp;
+	unsigned long long int tmp;
 	STEP ();
 	for (int i = 0; i < 8; i ++)
 	{
@@ -424,7 +424,7 @@ void DUP_STACK () {
 	cpu.p ++;
 }
 void SWITCH () {
-	uint64_t *t = cpu.s[cpu.p - 1];
+	unsigned long long int *t = cpu.s[cpu.p - 1];
 	cpu.s[cpu.p - 1] = cpu.s[cpu.p - 2];
 	cpu.s[cpu.p - 2] = t;
 }
@@ -524,7 +524,7 @@ void WR_B_COORD () {
 }
 void RD_W_COORD () {
 	unsigned char ox = cpu.r[1], oy = cpu.r[2], oz = cpu.r[3];
-	uint64_t temp = 0;
+	unsigned long long int temp = 0;
 	(*cpu.c) = 0;
 	for (int i = 0; i < 8; i++)
 	{
@@ -570,7 +570,7 @@ void RD_W_COORD () {
 }
 void WR_W_COORD () {
 	unsigned char ox = cpu.r[1], oy = cpu.r[2], oz = cpu.r[3];
-	uint64_t temp = (*cpu.c);
+	unsigned long long int temp = (*cpu.c);
 	for (int i = 0; i < 8; i++)
 	{
 		temp = temp >> i * 8;
