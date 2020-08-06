@@ -24,6 +24,7 @@ int main (int argv, char **argc)
 	FILE *f;
 	long sz;
 	int debug = 0;
+	char dx, dy, dz;
 
 	for (int i = 1; i < argv; i ++)
 	{
@@ -49,6 +50,8 @@ int main (int argv, char **argc)
 		}
 		else
 		{
+			printf ("Enter a breakpoint in as xxx yyy zzz\n");
+			scanf ("%i %i %i", dx, dy, dz);
 			debug = 1;
 		}
 	}
@@ -74,6 +77,10 @@ int main (int argv, char **argc)
 			running = 1;
 			input = in;
 			output = out;
+			while (running && ip.x != dx && ip.y != dy && ip.z != dz)
+			{
+				step ();
+			}
 			printf ("Press ENTER to step through instructions.\n");
 			while (running)
 			{
