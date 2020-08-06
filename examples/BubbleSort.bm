@@ -1,10 +1,11 @@
 {
 ~ A Blancmange Bubble Sort implementation ~
 v;~ Get length of string ~
+B;
 1>2r\014P1pd5Pc_v;
-rv............<;;
+r.v...........<;
 \00;
-2>;
+2.>A[1dB[1iAPBP';
 r;
 \01;
 3;
@@ -16,7 +17,7 @@ r;
 r;
 \00;
 ~ print put begining string ~
->5Pc_A[P=?vAO1i;
+>5Pc_A[P=?vAO1i';
 v##...O\0arA<;
 0;
 r;
@@ -30,3 +31,9 @@ v;
 {
 ~ string to sort ~hifjderabz;
 ~ length of string ~\0a;
+;;;;;;;;;;;;;
+,..............<;
+{
+;;;;
+................v;
+................Q;
