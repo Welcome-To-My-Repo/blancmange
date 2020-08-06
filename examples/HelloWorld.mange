@@ -1,0 +1,6 @@
+1r\002r\003r\014r\00v;~ Initialize Registers ~
+v...........<;
+>5[5P4P=?Q5O1iv; ~ Loop through printing ~
+^.............<;
+{
+Hello, world!\0a\00; ~ This is the string ~

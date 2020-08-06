@@ -1,5 +1,5 @@
 /*
- * A UI for the Blancmange Interpreter
+ * A Command Line front end for the Blancmange Virtual Machine
  * Author: o_o
  * Date: 2020
  */
@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 char in () {char c; scanf(" %c", &c); return c;}
-void out (char c) {printf ("%c", c);}
+void out (char c) {fputc(c, stdout);}
 
 int main (int argv, char **argc)
 {
@@ -23,35 +23,77 @@ int main (int argv, char **argc)
 	unsigned long long int bs = 0;
 	FILE *f;
 	long sz;
+	int debug = 0;
 
 	for (int i = 1; i < argv; i ++)
 	{
-		f = fopen(argc[i], "r");
-		if (f == 0)
+		if (argc[i][0] != '-')
 		{
-			printf ("%s not found!\n", argc[i]);
+			f = fopen(argc[i], "r");
+			if (f == 0)
+			{
+				printf ("%s not found!\n", argc[i]);
+			}
+			else
+			{
+				fseek (f, 0, SEEK_END);
+				sz = ftell(f);
+				fseek (f, 0, 0);
+				buffer = realloc (buffer, bs + sz);
+				for (int j = 0; j < sz; j ++)
+				{
+					buffer[bs + j] = fgetc(f);
+				}
+				bs += sz;
+			}
 		}
 		else
 		{
-			fseek (f, 0, SEEK_END);
-			sz = ftell(f);
-			fseek (f, 0, 0);
-			buffer = realloc (buffer, bs + sz);
-			for (int j = 0; j < sz; j ++)
-			{
-				buffer[bs + j] = fgetc(f);
-			}
-			bs += sz;
+			debug = 1;
 		}
 	}
-	if (bs > 0)
+	if (debug == 0)
 	{
-		load ((unsigned char*)buffer, bs);
-		run (in, out);
+		if (bs > 0)
+		{
+			if (1 == load ((unsigned char*)buffer, bs))
+				return 1;
+			run (in, out);
+		}
+		else
+		{
+			printf ("No files loaded!\n");
+		}
 	}
 	else
 	{
-		printf ("No files loaded!\n");
+		if (bs > 0)
+		{
+			if (1 == load ((unsigned char*)buffer, bs))
+				return 1;
+			running = 1;
+			input = in;
+			output = out;
+			printf ("Press ENTER to step through instructions.\n");
+			while (running)
+			{
+				printf ("Current Instruction: %c\n", T[ip.x][ip.y][ip.z]);
+				printf ("Instruction Pointer: x %i, y %i, z %i\n",
+						ip.x,
+						ip.y,
+						ip.z);
+				printf ("Current Register: %lli\n", (*cpu.c));
+				printf ("Registers:\n");
+				for (int j = 0; j < 16; j ++)
+					printf ("%lli ", cpu.r[j]);
+				printf ("\nStack:\n");
+				if (cpu.p > 1)
+					printf ("%lli %lli\n", (*cpu.s[cpu.p]), (*cpu.s[cpu.p - 1]));
+				printf("\n");
+				getchar ();
+				step();
+			}
+		}
 	}
 	return 0;
 }

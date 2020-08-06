@@ -10,13 +10,13 @@ hi link C Comment
 syn match S "[{|}|;]"
 hi link S PreProc
 
-syn match PC "[>|<|\^|v|\.|,|@|#|Q]"
+syn match PC "[>|<|\^|v|'|,|@|#|Q]"
 hi link PC Type
 
 syn match Reg "[0-9|A-F]"
 hi link Reg Function
 
-syn match RI "[s|S|r|R|f|j|i|d|\"|k|K|P]"
+syn match RI "[i|d|s|S|f|r|R|\"|!|P]"
 hi link RI Constant
 
 syn match Math "[p|c|u|&|\||!|+|-|_|\*|\/|%]"

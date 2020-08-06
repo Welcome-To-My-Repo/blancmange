@@ -5,49 +5,86 @@ A three dimensional esoteric RISC.
 
 ---
 
-# Instruction Pointer Instructions
+# Overview
+
+Blancmange is an interpreted RISC that supports three dimensional traversal of instructions.
+The Instruction Pointer can move with six degrees of freedom within a three dimensional space.
+
+## Reference Implementation
+
+Blancmange is implemented as a portable virtual machine backend for the C language.
+The entire backend is contained in a single header file designed to be used by a front end application that will handle loading and executing source code.
+
+A simple command-line front end has been provided with the Blancmange header that facilitates loading, executing, and basic program debugging.
+
+---
+
+# The Instruction Pointer
+
+In normal architectures, the instruction pointer moves only forward.
+In Blancmange, the instruction pointer can move in six directions.
+Instructions are stored in a three dimensional tesseract of 256x256x256 bytes.
+A tesseract allows the pointer to iterate beyond the bounds of the cube and enter at the opposite face from the exit point.
+
+## Instruction Pointer Instrictions
 
 * ` `	no operation
 * `.`	no operation
-* `'`	Increase on Z-axis
-* `,`	Decrease on Z-axis
-* `^`	Increase on Y-axis
-* `v`	Decrease on Y-axis
-* `>`	Increase on X-axis
-* `<`	Decrease on X-axis
-* `@`	unconditional jump using r1-r3 for coordinates
-* `#`	unconditional bridge
+* `'`	increase on Z-axis
+* `,`	decrease on Z-axis
+* `^`	increase on Y-axis
+* `v`	decrease on Y-axis
+* `>`	increase on X-axis
+* `<`	decrease on X-axis
+* `@`	unconditional jump to coordinates in r1-r3
+* `#`	unconditional bridge.
 * `Q`	end program
 
 ---
 
-# Register Instructions
+# The CPU Registers
 
-* `0123456789ABCDEF` Select Register
-* `i`	increment
-* `d`	decrement
-* `s`	shift left 1 bit
-* `S`	shift right 1 bit
-* `f`	flip first bit
-* `r`	set register to the byte after this instruction
-* `R`	set register to the word after this instruction
-* `"`	set r1-r3 to current coordinates
-* `P`	Push register to stack
+The Blancmange virtual machine has a total of sixteen 64 bit word registers.
+Data can be loaded and stored in registers as a byte or a word.
+Only a single register can be operated on at one time.
+The "current" register can be selected using 0-9 and A-F.
+
+Register 0 (r0) is used as a flag for comparison instructions.
+Registers 1-3 (r1-r3) are used to hold x, y, and z coordinates respectively.
+
+## Register Instructions
+
+* `0123456789ABCDEF` Select Current Register
+* `i`	Increment the current register.
+* `d`	Decrement the current register.
+* `s`	Shift left by 1 bit in the current register.
+* `S`	Shift right by 1 bit in the current register.
+* `f`	Flip the first bit in the current register.
+* `r`	Set the current register to the byte after this instruction.
+* `R`	Set the current register to the word (next eight bytes) after this instruction.
+* `"`	Set r1-r3 to the current instruction pointer coordinates.
+* `!`	Perform a binary NOT on the current register.
+* `P`	Push the current register to the stack.
 
 ---
 
-# Operand Stack Instructions
+# The Register Stack
 
-* `p`	pop from stack and set the current register to the value in the popped register.
-* `c`	duplicate top
-* `u`	switch top with below
+Mathematical and logical operators determine which registers to use by the register stack.
+The stack is a LIFO structure that holds register identifiers that are popped by operators.
+Operators will pop y, then x, then push x holding the result.
 
-## Stack Math Instructions
+## Stack Manipulator Instructions
+
+* `p`	Pop the top of the stack and set the current register.
+* `c`	Duplicate the top of the stack.
+* `u`	Switch the top two stack elements.
+
+## Stack Operator Instructions
 
 * `&`	binary AND
 * `|`	binary OR
 * `_`	binary XOR
-* `!`	binary NOT
 * `+`	addition
 * `-`	subtraction
 * `*`	multiplication
@@ -56,42 +93,54 @@ A three dimensional esoteric RISC.
 
 ---
 
-# Flag Register Instructions
+# Branching
 
-* `g`	greater than, set r0 to max
-* `l`	less than, set r0 to max
-* `=`	if equal, set r0 to max
-* `?`	if r0 is 0, skip next instruction
-* `b`	if r0 is 0, emulate `<` otherwise emulate `>`
-* `B`	if r0 is 0, emulate `v` otherwise emulate `^`
-* `Z`	if r0 is 0, emulate `.` otherwise emulate `,`
+Blancmange offers both a conditional execution instruction as well as three different branch instructions.
+Branching is conditional on the value in r0.
+The value of r0 can be set automatically by comparison instructions which set r0 to maximum if the comparison is true, or zero if the comparison is false.
+
+## Flag Register Instructions
+
+* `g`	If x > y, set r0 to max, else set r0 to 0.
+* `l`	If x < y, set r0 to max, else set r0 to 0.
+* `=`	If x == y, set r0 to max, else set r0 to 0.
+* `?`	If r0 is max, execute the next instruction, else emulate the unconditional branch.
+* `b`	If r0 is max, emulate `>`, else emulate `<`.
+* `B`	If r0 is max, emulate `^`, else emulate `v`.
+* `B`	If r0 is 0, emulate `v` otherwise emulate `^`
+* `Z`	If r0 is max, emulate `'`, otherwise emulate `,`.
 
 ---
 
-# I/O Instructions
+# I/O
 
-* `[`	reads byte from coordinates in r1-r3 and sets r0 with byte
-* `]`	writes byte from r0 to coordinates in r1-r3
-* `(`	reads word from coordinates in r1-r3 and sets r4 with it
-* `)`	writes word from r4 to coordinates in r1-r3
-* `I`	Read in a byte from default stream into r0
-* `O`	Write a byte to the default stream from r0
-* `m`	Read byte from memory address r4 plus offset r5 to r0
-* `M`	Write byte from r0 to memory address r4 plus offset r6
+Blancmange has several methods of input and output from the CPU.
+Individual bytes and words can be read and written to the program space.
+When a word is read or written, the direction is the same as the direction of the instruction pointer. So if a word is stored in ascending Y indices, then the instruction pointer would have to be iterating towards increasing Y values in order for the word to be read properly.
+
+## I/O Instructions
+
+* `[`	Set the current register to the byte at r1-r3.
+* `]`	Set the byte at r1-r3 from the current register.
+* `(`	Set the current register to the word beginning at r1-r3.
+* `)`	Set the word beginning at r1-r3 from the current register.
+* `I`	Read a byte from the default stream and set the current register with it.
+* `O`	Write a byte to the stream from the current register.
+* `m`	Read byte from the memory address in r4 at the offset in r5 to the current register.
+* `M`	Write a byte from the current register to the memory address in r4 at the offset in r5.
 
 ---
 
 # System Interface
 
-* `Y`	Calls Kernel using r4-r9 for parameters. Return value is placed in r4.
+**Low level stuff is not implemented right now.**
+As a side effect, the `m` and `M` instructions are useless as the runtime is contained inside the executable space.
+
+* *`Y`	Calls Kernel using r4-r9 for parameters. Return value is placed in r4.*
 
 ---
 
 # Blancmange Source Format
-
-Blancmange executes instructions by moving the instruction pointer through a three dimensional tesseract.
-The tesseract allows the instruction pointer to freely iterate beyond the dimensions of the cube by entering at the opposite face of its exit point preventing bounds errors.
-The tesseract contains a three dimensional cube with 256^3 byte indexes.
 
 A Blancmange source file divides the three dimensions of instructions into individual planes along the Z-axis.
 Each two dimensional plane has an X and Y axis with 256x256x1 dimensions.
@@ -111,7 +160,7 @@ Blancmange source code uses only visible ASCII characters and the space.
 Invisible and control characters are ignored.
 Blancmange parses source code by reading in groups of 256 characters and 256 lines.
 
-* `{`	Begin a new 256x256 plane.
+* `{`	Begins a new 256x256 plane before 256 lines have occurred.
 * `;`	Begin a new line before 256 characters has occurred.
 * `~`	surrounds comments
 * `\\`	escapes byte values
@@ -119,44 +168,9 @@ Blancmange parses source code by reading in groups of 256 characters and 256 lin
 
 ## Encoding Raw Bytes in Source Code
 
-Raw byte values can be enoded in a text file through use of the backslash, `\\`.
-Each byte is represented by a two-digit hexadecimal value prepended by a backslash.
-`\6F` or `\a0`.
+Raw byte values can be encoded in a text file through use of the backslash, `\`.
+Each byte is represented by a two-digit hexadecimal value prepended by a backslash as in `\6F` or `\a0`. This byte representation is textual and is only valid written horizontally from left to right.
 
-Be aware that each three-character byte represents a single byte internally.
-Code appearing after encoded bytes may not be properly aligned.
+Be aware that each three-character encoded byte only represents a single byte internally and will visually distort the alignment of source code lines along the X-axis.
 
 ---
-
-# The Program Counter
-
-The Program Counter can move forward or backward along an axis.
-The axis and direction can be dynamically changed throughout a program.
-When a program starts, the PC begins at 0,0,0 and moves forward along the x axis.
-
-The cube is oriented so that the origin point of the three axis is located in the upper left corner of the source file.
-Each character to the right increases on the X-axis.
-Each line increases on the Y-axis.
-Each new plane increases on the Z-axis.
-
----
-
-# Blancmange Registers
-
-There are sixteen registers in Blamcmange.
-Each register is 64bit unsigned.
-r0 doubles as a flag register for comparisons.
-A register can be selected as the current register.
-Register instructions operate on the current register.
-
----
-
-# The Operand Stack
-
-Operstions are performed on registers using a stack.
-Register ID's are pushed onto the stack and are popped by operators.
-Operators will use the ID's to determine which registers to operate on.
-All Operators except for *pop* and *duplicate* require two operands.
-
-Mathematical Operators all require two operands.
-Operators will pop y, then pop x, then push x with the result.

@@ -1,6 +1,7 @@
 /*
- * The Blancmange Kernel Reference Implementation
+ * The Blancmange Virtual Machine Reference Implementation
  * Author: o_o <yosngne@gmail.com>
+ * Date: 08 - 2020
  *
  * This file is public domain.
 */
@@ -9,23 +10,38 @@
 #define BLANCMANGE
 
 /*
-* Blancmange is an esoteric language that stores programs in a cube matrix of
-* bytes and allows instruction pointer movement in three dimensions.
-*
-* Blancmange gets its name from a rough homile of the name of its predecessor,
-* Befunge.
-*
-* This header defines a small interpreter for the Blancmange instruction set
-* designed to be used internally by an arbitrary user interface application.
-*/
+ * Blancmange is an esoteric RISC that stores programs in a three-dimensional
+ * byte matrix that the instruction pointer can move through in six
+ * different directions.
+ */
 
+/*
+ * This header implements Blancmange as a lightweight portable virtual machine
+ * backend. The virtual machine accepts loading and executing instructions as
+ * well as a debugging mode where instructions can be stepped through
+ * individually.
+ */
+
+int load (unsigned char *txt, long int l);
+/*
+ * "load" is used to load a Blancmange program into the text cube. It takes a
+ * character array containing Blancmange source code, "txt", and its
+ * length, "l".
+ *
+ * "load" returns 1 if it fails to parse the source correctly.
+ */
+int run (char (*I)(), void (*O)(char c));
+/*
+ * "run" is called to execute a loaded Blancmange program. It takes two
+ * functions as arguments. "I", and "O" are implemented by the front end to
+ * handle single character I/O from the default streams provided by the front
+ * end.
+ */
 static unsigned char T [256][256][256];
 /*
  * The Tesseract holds the instructions that the instruction pointer iterates
  * through.
  */
-
-
 struct BM_POINTER;
 /*
  * IP holds the position and direction of the instruction pointer
@@ -37,28 +53,17 @@ struct BM_CPU;
  * register
  */
 
-int load (unsigned char *txt, long int l);
-/*
- * Loads a program from source code into the tesseract.
- */
-
-
 char (*input)();
 void (*output)(char c);
-int run (char (*I)(), void (*O)(char c));
 /*
- * executes the loaded instructions.
- * I is the file descriptor for the default input.
- * O is the file descriptor for the default output.
- * It's usually a good choice for Unix/Linux to enter zero for I and one for O.
- *
+ * Pre-defined function pointers called by the virtual machine to handle I/O
+ * with the default streams.
  */
-
-//errors
-#define BAD_HEX 1
-#define EMPTY_STACK 2
-#define NOT_ENOUGH_STACK 3
-#define FULL_STACK 4
+int step ();
+/*
+ * The debugging execution mode. Increments the instruction pointer one
+ * instruction at a time.
+ */
 
 struct BM_POINTER
 {
@@ -93,34 +98,46 @@ struct BM_CPU
 	unsigned char p;
 	unsigned long long int *s[256];
 };
-
 struct BM_CPU cpu;
 
 void (*t[256]) ();
+/*
+ * function array containing code for instructions
+ */
 
 void STEP ();
+/*
+ * An internal function for the virtual machine.
+ * It increments the instruction pointer
+ */
 
+/* below are the declarations for all the instructions */
 void NOP (); void INC_Z (); void DEC_Z (); void INC_Y (); void DEC_Y ();
 void INC_X (); void DEC_X (); void JUMP (); void BRIDGE (); void END ();
 void R0 (); void R1 (); void R2 (); void R3 (); void R4 (); void R5 ();
 void R6 (); void R7 (); void R8 (); void R9 (); void RA (); void RB ();
-void RC (); void RD (); void RE (); void RF (); void INC_R (); void DEC_R (); 
-void SET_R_B (); void SET_R_W (); void SET_COORD (); void PUSH_R (); 
+void RC (); void RD (); void RE (); void RF (); void INC_R (); void DEC_R ();
+void SET_R_B (); void SET_R_W (); void SET_COORD (); void PUSH_R ();
 void POP_R (); void DUP_STACK (); void SWITCH (); void AND (); void OR ();
 void NOT (); void XOR (); void ADD (); void SUB (); void MUL (); void DIV ();
-void MOD (); void GT (); void LT (); void EQL (); void COND (); void BR_X (); 
-void BR_Y (); void BR_Z (); void RD_B_COORD (); void WR_B_COORD (); 
-void RD_W_COORD (); void WR_W_COORD (); void ISTREAM (); void OSTREAM (); 
+void MOD (); void GT (); void LT (); void EQL (); void COND (); void BR_X ();
+void BR_Y (); void BR_Z (); void RD_B_COORD (); void WR_B_COORD ();
+void RD_W_COORD (); void WR_W_COORD (); void ISTREAM (); void OSTREAM ();
 void RMEM (); void WMEM (); void SHL_R (); void SHR_R (); void FL_B ();
-
 void SYS ();
 
 unsigned char running = 1;
+/*
+ * internal virtual machine component.
+ * self explainatory.
+ */
 
+/* definition of "load" */
 int load (unsigned char* txt, long int l)
 {
 	unsigned char x = 0, y = 0, z = 0;
 	long int i;
+	/* assign all the functions to the function array */
 	t[0] = NOP; t[' '] = NOP; t['\''] = INC_Z; t[','] = DEC_Z;
 	t['^'] = DEC_Y; t['v'] = INC_Y; t['>'] = INC_X; t['<'] = DEC_X;
 	t['@'] = JUMP; t['#'] = BRIDGE; t['Q'] = END; t['0'] = R0; t['1'] = R1;
@@ -135,8 +152,9 @@ int load (unsigned char* txt, long int l)
 	t['Z'] = BR_Z; t['['] = RD_B_COORD; t[']'] = WR_B_COORD;
 	t['('] = RD_W_COORD; t[')'] = WR_W_COORD; t['I'] = ISTREAM;
 	t['O'] = OSTREAM; t['m'] = RMEM; t['M'] = WMEM; t['s'] = SHL_R;
-	t['S'] = SHR_R; t['f'] = FL_B; t['.'] = NOP;
+	t['Y'] = SYS; t['S'] = SHR_R; t['f'] = FL_B; t['.'] = NOP;
 
+	/* load the text, checking for syntax control characters */
 	for (int i = 0; i < l; i ++)
 	{
 		if (txt[i] < 32 || txt[i] > 126)
@@ -149,6 +167,8 @@ int load (unsigned char* txt, long int l)
 			{
 				case '{':	//Starting a new plane
 					{
+						if (x == 0 && y == 0)
+							break;
 						z++;
 						x = 0;
 						y = 0;
@@ -186,7 +206,7 @@ int load (unsigned char* txt, long int l)
 						}
 						else
 						{
-							return BAD_HEX;
+							return 1;
 						}
 
 						if (h[1] < 58 && h[1] > 47)
@@ -206,7 +226,7 @@ int load (unsigned char* txt, long int l)
 						}
 						else
 						{
-							return BAD_HEX;
+							return 1;
 						}
 						T[x][y][z] = HEX;
 						if (x == 255)
@@ -252,30 +272,44 @@ int load (unsigned char* txt, long int l)
 			}
 		}
 	}
+	ip.x = 0;
+	ip.y = 0;
+	ip.z = 0;
+	ip.o = 120;
+	cpu.c = &cpu.r[0];
 	return 0;
 }
 
+/* uncomment for debugging */
+//#include <stdio.h>
 int run (char (*I)(), void (*O)(char c))
 {
 	input = I;
 	output = O;
 	unsigned char pos;
-	cpu.c = &cpu.r[0];
-
-	ip.x = 0;
-	ip.y = 0;
-	ip.z = 0;
-	ip.o = 120;
 
 	while (running)
 	{
-		pos = T[ip.x][ip.y][ip.z];
-		(*t[pos])();
-		STEP ();
+		pos = T[ip.x][ip.y][ip.z]; //get the instruction
+		/*uncomment for debugging*/
+		//printf("%i %i %i %c\n", ip.x, ip.y, ip.z, pos);
+		(*t[pos])(); //execute the instruction
+		STEP (); //increment pointer
 	}
 	return 0;
 }
 
+/* same as "run" but not looped */
+int step ()
+{
+	unsigned char pos;
+	pos = T[ip.x][ip.y][ip.z];
+	(*t[pos])();
+	STEP();
+	return 0;
+}
+
+/* self explainatory */
 void STEP ()
 {
 	switch (ip.o)
@@ -313,6 +347,7 @@ void STEP ()
 	}
 }
 
+/* instruction definitions */
 void NOP () {}
 void INC_Z () {ip.o = 122;}
 void DEC_Z () {ip.o = 250;}
@@ -353,19 +388,20 @@ void SHL_R () {(*cpu.c) = (*cpu.c) << 1;}
 void SHR_R () {(*cpu.c) = (*cpu.c) >> 1;}
 void FL_B () {(*cpu.c) = (*cpu.c) ^ 1;}
 void SET_R_B () {
-	STEP(); 
+	STEP();
 	(*cpu.c) = T[ip.x][ip.y][ip.z];
 }
 void SET_R_W () {
-	STEP ();
 	(*cpu.c) = 0;
 	unsigned long long int tmp;
+	STEP ();
 	for (int i = 0; i < 8; i ++)
 	{
-		STEP();
 		tmp = T[ip.x][ip.y][ip.z];
 		tmp = tmp << i * 8;
 		(*cpu.c) = (*cpu.c) ^ tmp;
+		if (i < 7)
+			STEP ();
 	}
 }
 void SET_COORD () {
@@ -377,13 +413,16 @@ void PUSH_R () {
 	cpu.p ++;
 	cpu.s[cpu.p] = cpu.c;
 }
-void POP_R () { 
+void POP_R () {
 	(*cpu.c) = (*cpu.s[cpu.p]);
-	cpu.s[cpu.p] = 0; 
-	cpu.p --; 
+	cpu.s[cpu.p] = 0;
+	cpu.p --;
 }
-void DUP_STACK () { cpu.s[cpu.p + 1] = cpu.s[cpu.p]; cpu.p ++; }
-void SWITCH () { 
+void DUP_STACK () {
+	cpu.s[cpu.p + 1] = cpu.s[cpu.p];
+	cpu.p ++;
+}
+void SWITCH () {
 	unsigned long long int *t = cpu.s[cpu.p];
 	cpu.s[cpu.p] = cpu.s[cpu.p - 1];
 	cpu.s[cpu.p - 1] = t;
@@ -399,9 +438,7 @@ void OR () {
 	cpu.p --;
 }
 void NOT () {
-	(*cpu.s[cpu.p - 1]) = ~ (*cpu.s[cpu.p]);
-	 cpu.s[cpu.p] = 0;
-	 cpu.p --;
+	(*cpu.c) = ~(*cpu.c);
 }
 void XOR () {
 	(*cpu.s[cpu.p - 1]) = (*cpu.s[cpu.p - 1]) ^ (*cpu.s[cpu.p]);
@@ -477,15 +514,115 @@ void BR_Z () {
 		ip.o = 250;
 }
 
-void RD_B_COORD () {}
-void WR_B_COORD () {}
-void RD_W_COORD () {}
-void WR_W_COORD () {}
-void ISTREAM () {cpu.r[0] = (*input)();}
-void OSTREAM () {(*output)((char)cpu.r[0]);}
-void RMEM () {}
-void WMEM () {}
+void RD_B_COORD () {
+	(*cpu.c) = T[cpu.r[1]][cpu.r[2]][cpu.r[3]];
+}
+void WR_B_COORD () {
+	T[cpu.r[1]][cpu.r[2]][cpu.r[3]] = (*cpu.c);
+}
+void RD_W_COORD () {
+	unsigned char ox = cpu.r[1], oy = cpu.r[2], oz = cpu.r[3];
+	unsigned long long int temp = 0;
+	(*cpu.c) = 0;
+	for (int i = 0; i < 8; i++)
+	{
+		temp = T[ox][oy][oz];
+		temp = temp << i * 8;
+		(*cpu.c) = (*cpu.c) ^ temp;
+		if (i < 7)
+		switch (ip.o)
+		{
+			case 120:
+				{
+					ox ++;
+					break;
+				}
+			case 121:
+				{
+					oy ++;
+					break;
+				}
+			case 122:
+				{
+					oz ++;
+					break;
+				}
+			case 248:
+				{
+					ox --;
+					break;
+				}
+			case 249:
+				{
+					oy --;
+					break;
+				}
+			case 250:
+				{
+					oz --;
+					break;
+				}
+		}
+	}
 
-void SYS () {}
+}
+void WR_W_COORD () {
+	unsigned char ox = cpu.r[1], oy = cpu.r[2], oz = cpu.r[3];
+	unsigned long long int temp = (*cpu.c);
+	for (int i = 0; i < 8; i++)
+	{
+		temp = temp >> i * 8;
+		T[ox][oy][oz] = (unsigned char)temp;
+		if (i < 7)
+		switch (ip.o)
+		{
+			case 120:
+				{
+					ox ++;
+					break;
+				}
+			case 121:
+				{
+					oy ++;
+					break;
+				}
+			case 122:
+				{
+					oz ++;
+					break;
+				}
+			case 248:
+				{
+					ox --;
+					break;
+				}
+			case 249:
+				{
+					oy --;
+					break;
+				}
+			case 250:
+				{
+					oz --;
+					break;
+				}
+		}
+	}
+
+}
+void ISTREAM () {(*cpu.c) = (*input)();}
+void OSTREAM () {(*output)((char)(*cpu.c));}
+void RMEM () {
+	unsigned char *point = (unsigned char *)cpu.r[4];
+	(*cpu.c) = point[cpu.r[5]];
+}
+void WMEM () {
+	unsigned char *point = (unsigned char *)cpu.r[4];
+	point[cpu.r[5]] = (*cpu.c);
+}
+
+void SYS () {
+
+}
 
 #endif //BLANCMANGE

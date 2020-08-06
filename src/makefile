@@ -1,5 +1,13 @@
+COMP = cc
+NAME = bm
+DEBUG = -g3
+OPT = -O3
+
 default:
-	cc main.c -obm -g3
+	$(COMP) main.c -o $(NAME) $(DEBUG)
+
+release:
+	$(COMP) main.c -o $(NAME) $(OPT)
 
 clean:
-	rm bm
+	rm $(NAME)
