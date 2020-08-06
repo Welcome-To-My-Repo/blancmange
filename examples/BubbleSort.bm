@@ -2,10 +2,10 @@
 ~ A Blancmange Bubble Sort implementation ~
 v;~ Get length of string ~
 B;
-1>2r\014P1pd5Pc_v;
+1>2r\014P1pd5Pc_v;~<- this is the for loop to go thru the string ~
 r.v...........<;
 \00;
-2.>A[1dB[1iAPBP';
+2.>A[1dB[1iFPc_';
 r;
 \01;
 3;
@@ -31,9 +31,16 @@ v;
 {
 ~ string to sort ~hifjderabz;
 ~ length of string ~\0a;
-;;;;;;;;;;;;;
+;;;;;;;;;;;;;;
 ,..............<;
 {
 ;;;;
-................v;
-................Q;
+..v......................<;;
+.v,#...........<;
+.........v...........<;
+.>APBP<?v>5P1P=........0!y;
+.....................#;
+........>F!1dA]1iB]1d^;
+v........................<;
+;;;;;;;;;;;;;
+,;
