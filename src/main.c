@@ -77,6 +77,7 @@ int main (int argv, char **argc)
 			printf ("Press ENTER to step through instructions.\n");
 			while (running)
 			{
+				printf ("\x1b[2J\x1b[H");
 				printf ("Current Instruction: %c\n", T[ip.x][ip.y][ip.z]);
 				printf ("Instruction Pointer: x %i, y %i, z %i\n",
 						ip.x,
@@ -86,9 +87,10 @@ int main (int argv, char **argc)
 				printf ("Registers:\n");
 				for (int j = 0; j < 16; j ++)
 					printf ("%lli ", cpu.r[j]);
-				printf ("\nStack:\n");
-				if (cpu.p > 1)
-					printf ("%lli %lli\n", (*cpu.s[cpu.p]), (*cpu.s[cpu.p - 1]));
+				printf ("\nStack: %i\n", cpu.p);
+				if (cpu.p > 0)
+					for (int j = cpu.p; j > 0; j --)
+						printf ("%lli ", (*cpu.s[j - 1]));
 				printf("\n");
 				getchar ();
 				step();

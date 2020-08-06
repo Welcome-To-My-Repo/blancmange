@@ -277,6 +277,7 @@ int load (unsigned char* txt, long int l)
 	ip.z = 0;
 	ip.o = 120;
 	cpu.c = &cpu.r[0];
+	cpu.p = 0;
 	return 0;
 }
 
@@ -411,85 +412,86 @@ void SET_COORD () {
 }
 void PUSH_R () {
 	cpu.p ++;
-	cpu.s[cpu.p] = cpu.c;
+	cpu.s[cpu.p - 1] = cpu.c;
 }
 void POP_R () {
-	(*cpu.c) = (*cpu.s[cpu.p]);
-	cpu.s[cpu.p] = 0;
+	(*cpu.c) = (*cpu.s[cpu.p - 1]);
+	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void DUP_STACK () {
-	cpu.s[cpu.p + 1] = cpu.s[cpu.p];
+	cpu.s[cpu.p] = cpu.s[cpu.p - 1];
 	cpu.p ++;
 }
 void SWITCH () {
-	unsigned long long int *t = cpu.s[cpu.p];
-	cpu.s[cpu.p] = cpu.s[cpu.p - 1];
-	cpu.s[cpu.p - 1] = t;
+	unsigned long long int *t = cpu.s[cpu.p - 1];
+	cpu.s[cpu.p - 1] = cpu.s[cpu.p - 2];
+	cpu.s[cpu.p - 2] = t;
 }
 void AND () {
-	(*cpu.s[cpu.p - 1]) = (*cpu.s[cpu.p - 1]) & (*cpu.s[cpu.p]);
-	cpu.s[cpu.p] = 0;
+	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) & (*cpu.s[cpu.p - 1]);
+	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void OR () {
-	(*cpu.s[cpu.p - 1]) = (*cpu.s[cpu.p - 1]) | (*cpu.s[cpu.p]);
-	cpu.s[cpu.p] = 0;
+	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) | (*cpu.s[cpu.p - 1]);
+	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void NOT () {
 	(*cpu.c) = ~(*cpu.c);
 }
 void XOR () {
-	(*cpu.s[cpu.p - 1]) = (*cpu.s[cpu.p - 1]) ^ (*cpu.s[cpu.p]);
-	cpu.s[cpu.p] = 0;
+	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) ^ (*cpu.s[cpu.p - 1]);
+	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void ADD () {
-	(*cpu.s[cpu.p - 1]) = (*cpu.s[cpu.p - 1]) + (*cpu.s[cpu.p]);
-	cpu.s[cpu.p] = 0;
+	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) + (*cpu.s[cpu.p - 1]);
+	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void SUB () {
-	(*cpu.s[cpu.p - 1]) = (*cpu.s[cpu.p - 1]) - (*cpu.s[cpu.p]);
-	cpu.s[cpu.p] = 0;
+	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) - (*cpu.s[cpu.p - 1]);
+	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void MUL () {
-	(*cpu.s[cpu.p - 1]) = (*cpu.s[cpu.p - 1]) * (*cpu.s[cpu.p]);
-	cpu.s[cpu.p] = 0;
+	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) * (*cpu.s[cpu.p - 1]);
+	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void DIV () {
-	(*cpu.s[cpu.p - 1]) = (*cpu.s[cpu.p - 1]) / (*cpu.s[cpu.p]);
-	cpu.s[cpu.p] = 0;
+	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) / (*cpu.s[cpu.p - 1]);
+	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void MOD () {
-	(*cpu.s[cpu.p - 1]) = (*cpu.s[cpu.p - 1]) % (*cpu.s[cpu.p]);
-	cpu.s[cpu.p] = 0;
+	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) % (*cpu.s[cpu.p - 1]);
+	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 
 void GT () {
-	if ((*cpu.s[cpu.p - 1]) > (*cpu.s[cpu.p]))
+	if ((*cpu.s[cpu.p - 2]) > (*cpu.s[cpu.p - 1]))
 		cpu.r[0] = 0 - 1;
 	else
 		cpu.r[0] = 0;
+	cpu.p -= 2;
 }
 void LT () {
-	if ((*cpu.s[cpu.p - 1]) < (*cpu.s[cpu.p]))
+	if ((*cpu.s[cpu.p - 2]) < (*cpu.s[cpu.p - 1]))
 		cpu.r[0] = 0 - 1;
 	else
 		cpu.r[0] = 0;
-
+	cpu.p -= 2;
 }
 void EQL () {
-	if ((*cpu.s[cpu.p - 1]) == (*cpu.s[cpu.p]))
+	if ((*cpu.s[cpu.p - 2]) == (*cpu.s[cpu.p - 1]))
 		cpu.r[0] = 0 - 1;
 	else
 		cpu.r[0] = 0;
-
+	cpu.p -= 2;
 }
 void COND () {
 	if (cpu.r[0] == 0)

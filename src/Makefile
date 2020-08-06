@@ -1,5 +1,5 @@
 COMP = cc
-NAME = bm
+NAME = blancmange
 DEBUG = -g3
 OPT = -O3
 
