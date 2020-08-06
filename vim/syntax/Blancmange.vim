@@ -5,6 +5,7 @@ if exists("b:current_syntax")
 endif
 
 syn match C "\~.*\~"
+syn match C "\."
 hi link C Comment
 
 syn match S "[{|}|;]"
@@ -22,10 +23,10 @@ hi link RI Constant
 syn match Math "[p|c|u|&|\||!|+|-|_|\*|\/|%]"
 hi link Math Statement
 
-syn match Cmp "[g|l|=|\?|b|B|Z]"
+syn match Cmp "[g|l|=|\?|x|y|z]"
 hi link Cmp Identifier
 
-syn match IO "[\[|\]|\(|\)|I|O|w|W|j|J]"
+syn match IO "[\[|\]|\(|\)|I|O|m|M]"
 hi link IO Operator
 
 syn match Byte "\\\x\x"
