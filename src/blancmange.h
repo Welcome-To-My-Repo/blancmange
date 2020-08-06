@@ -148,8 +148,8 @@ int load (unsigned char* txt, long int l)
 	t['P'] = PUSH_R; t['p'] = POP_R; t['c'] = DUP_STACK; t['u'] = SWITCH;
 	t['&'] = AND; t['|'] = OR; t['_'] = XOR; t['!'] = NOT; t['+'] = ADD;
 	t['-'] = SUB; t['*'] = MUL; t['/'] = DIV; t['%'] = MOD; t['g'] = GT;
-	t['l'] = LT; t['='] = EQL; t['?'] = COND; t['b'] = BR_X; t['B'] = BR_Y;
-	t['Z'] = BR_Z; t['['] = RD_B_COORD; t[']'] = WR_B_COORD;
+	t['l'] = LT; t['='] = EQL; t['?'] = COND; t['x'] = BR_X; t['y'] = BR_Y;
+	t['z'] = BR_Z; t['['] = RD_B_COORD; t[']'] = WR_B_COORD;
 	t['('] = RD_W_COORD; t[')'] = WR_W_COORD; t['I'] = ISTREAM;
 	t['O'] = OSTREAM; t['m'] = RMEM; t['M'] = WMEM; t['s'] = SHL_R;
 	t['Y'] = SYS; t['S'] = SHR_R; t['f'] = FL_B; t['.'] = NOP;
