@@ -1,0 +1,46 @@
+{
+~ A Blancmange Bubble Sort implementation ~
+v;~ Get length of string ~
+B;
+1>2r\014P1pd5Pc_v;~<- this is the for loop to go thru the string ~
+r.v...........<;
+\00;
+2.>A[1dB[1iFPc_';
+r;
+\01;
+3;
+r;
+\01;
+4;
+[;
+2;
+r;
+\00;
+~ print put begining string ~
+>5Pc_A[P=?vAO1i';
+v##...O\0arA<;
+0;
+r;
+\00;
+v;
+?;
+~ If the sort is finished, print sorted string out ~
+>1r\002r\003r\01v;
+.#........>5Pc_A[P=?vAO1i;
+>^..................>Ar\0aOQ;
+{
+~ string to sort ~hifjderabz;
+~ length of string ~\0a;
+;;;;;;;;;;;;;;
+,..............<;
+{
+;;;;
+..v......................<;;
+.v,#...........<;
+.........v...........<;
+.>APBP<?v>5P1P=........0!y;
+.....................#;
+........>F!1dA]1iB]1d^;
+v........................<;
+;;;;;;;;;;;;;
+,;
