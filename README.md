@@ -164,7 +164,6 @@ Blancmange parses source code by reading in groups of 256 characters and 256 lin
 * `;`	Begin a new line before 256 characters has occurred.
 * `~`	surrounds comments
 * `\\`	escapes byte values
-* Tab characters and other invisible or control characters are ignored.
 
 Source code file extensions can be either ".bm" or ".mange".
 These extensions are recognized by the Vim syntax highlighting theme.

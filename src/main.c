@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char in () {char c; scanf(" %c", &c); return c;}
-void out (char c) {fputc(c, stdout);}
+char in () {return getchar ();}
+void out (char c) {putchar(c);}
 
 int main (int argv, char **argc)
 {
