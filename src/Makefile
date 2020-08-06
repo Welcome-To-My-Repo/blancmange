@@ -4,10 +4,11 @@ DEBUG = -g3
 OPT = -O3
 
 default:
-	$(COMP) main.c -o $(NAME) $(DEBUG)
+	$(COMP) reference.c -o $(NAME) $(DEBUG)
 
 release:
-	$(COMP) main.c -o $(NAME) $(OPT)
+	$(COMP) reference.c -o $(NAME) $(OPT)
+	strip $(NAME)
 
 clean:
 	rm $(NAME)

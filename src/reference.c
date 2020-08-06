@@ -16,7 +16,7 @@ int main (int argv, char **argc)
 {
 	if (argv < 2)
 	{
-		printf ("No imput files specified!\n");
+		printf ("No input files specified!\n");
 		return 1;
 	}
 	char *buffer = malloc (1);
@@ -96,6 +96,8 @@ int main (int argv, char **argc)
 				step();
 			}
 		}
+		else
+			printf ("No files loaded!\n");
 	}
 	return 0;
 }
