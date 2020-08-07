@@ -4,21 +4,38 @@
 ~ 	hold number of elements in rA ~
 ~ 	read and write elements using rB ~
 v......................................................<;
-v................<;
->1r\00>1PAP=?v5[O1i^;
-...........Q;
-~ loop printing out the characters ~
-~ while loop ~
-~ hold swapped flag in rF ~
-~ loop is rF is non-zero ~
-~ if rF is zero, print out the sorted string ~
-
-~ for loop ~
+v...v..............<;
+>1r\00>1PAPl0!?v5[O1i^;~ echo the initial string ~
+v............<;
+0;
+r;
+\00;
+.........v..............<;
+>.#vx1Pc_>1PAPl0!?Q5[O1i^; ~ while loop. if no swaps, print out string ~
+.v.<;
+.F;
+.P;
+.c;
+._;
+.!;
+.A;
+.P;
+.1;
+.p;
+.d#.....<;
+>1P8Pg?v^;~ for loop ~
+..v.....<;
+..>5[P1d6[Pl?v>v;
 ~ start at last element ~
 ~ if the current element is at zero, exit the loop ~
 ~	if the element is less than the one before it.. ~
 ~		swap the elememt and the one before it ~
 ~		set rF to non zero ~
+.vd1]5]6i1...<;
+.>FP0p?vv;
+.......F;
+.......!;
+^......<<......<;
 ~ go back up to while loop ~
 {
 ~0, 0, 1 is where the string starts~

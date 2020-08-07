@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char in () {return getchar ();}
-void out (char c) {putchar(c);}
+char in () {char c; scanf ("%c", &c); return c;}
+void out (char c) {printf ("%c", c);}
 
 int main (int argv, char **argc)
 {
@@ -77,7 +77,6 @@ int main (int argv, char **argc)
 			printf ("Press ENTER to step through instructions.\n");
 			while (running)
 			{
-				printf ("\x1b[2J\x1b[H");
 				printf ("Current Instruction: %c\n", T[ip.x][ip.y][ip.z]);
 				printf ("Instruction Pointer: x %i, y %i, z %i\n",
 						ip.x,
