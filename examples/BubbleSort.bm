@@ -1,12 +1,12 @@
 ~ loop getting characters from user until !~
->APc_1r\002r\003r\014r\21Ar\00>5IP4P=v;
+>APc_1r\002r\003r\014r\0aAr\00>5IP4P=v;
 ....................^i1iA]5x...........................v;
 ~ 	hold number of elements in rA ~
 ~ 	read and write elements using rB ~
 v......................................................<;
 v...v..............<;
->1r\00>1PAPl0!?v5[O1i^;~ echo the initial string ~
-v............<;
+>1r\00>1PAPl0!?v1i5[O^;
+vQ...........<;
 0;
 r;
 \00;
