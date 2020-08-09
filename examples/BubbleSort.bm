@@ -1,41 +1,38 @@
-~ loop getting characters from user until !~
->APc_1r\002r\003r\014r\0aAr\00>5IP4P=v;
-....................^i1iA]5x...........................v;
-~ 	hold number of elements in rA ~
-~ 	read and write elements using rB ~
-v......................................................<;
-v...v..............<;
->1r\00>1PAPl0!?v1i5[O^;
-vQ...........<;
-0;
+~A Blancmange Bubble Sort Implementation~
+{
+v;
+6;
+r;
+\0a;
+.............................................v.............<;
+~ this reads in a line            while loop  prints sorted string~
+v>5IP6P=?v5]Ai1iv................>FPEP=?v1Pc_>1PAP=?'5[5O1i^;
+3^..............<.......................F;
+r.......................................!;
+\01;
+>^;
+v........<;
+1;
 r;
 \00;
-.........v..............<;
->.#vx1Pc_>1PAPl0!?Q5[O1i^;~ while loop. if no swaps, print out string ~
-.v.<;
-.F;
-.P;
-.c;
-._;
-.!;
-.A;
-.P;
-.1;
-.p;
-.d#.....<;
->1P8Pg?v^;~ for loop ~
-..v.....<;
-..>5[P1d6[Pl?v>v;
-~ start at last element ~
-~ if the current element is at zero, exit the loop ~
-~	if the element is less than the one before it.. ~
-~		swap the elememt and the one before it ~
-~		set rF to non zero ~
-.vd1]5]6i1...<;
-.>FP0p?vv;
-.......F;
-.......!;
-^......<<......<;
-~ go back up to while loop ~
+v.............<;
+>1PAP=?v5[5O1i^;~ echo input string ~
+.......5;
+.......r;
+.......\0a;
+.......O;
+.......>.......................F.^......';
+{~ The string is stored here (Z index 1)~
+;
 {
-~0, 0, 1 is where the string starts~
+>AP1pdv..........................';
+v.....<...............>v;
+~ For loop that performs swapping ~
+>1PEPg0!?v8[1d7[8P7Pl?y;
+^........._cPF]8d1]7i1<;
+^......................<;
+.........>.......................^..................>1r\0aOQ;
+{
+,................................v;
+;;;;;;;;;;;;;;;;;;;
+^................................,#.....<;
