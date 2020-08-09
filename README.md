@@ -26,7 +26,7 @@ In Blancmange, the instruction pointer can move in six directions.
 Instructions are stored in a three dimensional tesseract of 256x256x256 bytes.
 A tesseract allows the pointer to iterate beyond the bounds of the cube and enter at the opposite face from the exit point.
 
-## Instruction Pointer Instrictions
+## Instruction Pointer Instructions
 
 * ` `	no operation
 * `.`	no operation
@@ -162,7 +162,7 @@ Blancmange parses source code by reading in groups of 256 characters and 256 lin
 * `{`	Begins a new 256x256 plane before 256 lines have occurred.
 * `;`	Begin a new line before 256 characters has occurred.
 * `~`	surrounds comments
-* `\\`	escapes byte values
+* `\`	escapes byte values
 
 Source code file extensions can be either ".bm" or ".mange".
 These extensions are recognized by the Vim syntax highlighting theme.
