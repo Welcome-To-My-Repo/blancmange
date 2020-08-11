@@ -105,9 +105,9 @@ The value of r0 can be set automatically by comparison instructions which set r0
 * `l`	If x < y, set r0 to max, else set r0 to 0.
 * `=`	If x == y, set r0 to max, else set r0 to 0.
 * `?`	If r0 is max, execute the next instruction, else emulate the unconditional branch.
-* `x`	If r0 is max, emulate `>`, else emulate `<`.
-* `y`	If r0 is max, emulate `^`, else emulate `v`.
-* `z`	If r0 is max, emulate `'`, otherwise emulate `,`.
+* `x`	If r0 is non-zero, emulate `>`, else emulate `<`.
+* `y`	If r0 is non-zero, emulate `^`, else emulate `v`.
+* `z`	If r0 is non-zero, emulate `'`, otherwise emulate `,`.
 
 ---
 
