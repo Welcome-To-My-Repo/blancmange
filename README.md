@@ -52,6 +52,8 @@ The "current" register can be selected using 0-9 and A-F.
 Register 0 (r0) is used as a flag for comparison instructions.
 Registers 1-3 (r1-r3) are used to hold x, y, and z coordinates respectively.
 
+---
+
 ## Register Instructions
 
 * `0123456789ABCDEF` Select Current Register
@@ -73,6 +75,8 @@ Registers 1-3 (r1-r3) are used to hold x, y, and z coordinates respectively.
 Mathematical and logical operators determine which registers to use by the register stack.
 The stack is a LIFO structure that can hold up to 256 register identifiers that are popped by operators.
 Operators will pop y, then x, then push x holding the result.
+
+---
 
 ## Stack Manipulator Instructions
 
@@ -167,11 +171,11 @@ Blancmange parses source code by reading in groups of 256 characters and 256 lin
 Source code file extensions can be either ".bm" or ".mange".
 These extensions are recognized by the Vim syntax highlighting theme.
 
+---
+
 ## Encoding Raw Bytes in Source Code
 
 Raw byte values can be encoded in a text file through use of the backslash, `\`.
 Each byte is represented by a two-digit hexadecimal value prepended by a backslash as in `\6F` or `\a0`. This byte representation is textual and is only valid written horizontally from left to right.
 
 Be aware that each three-character encoded byte only represents a single byte internally and will visually distort the alignment of source code lines along the X-axis.
-
----
