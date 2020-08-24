@@ -1,13 +1,13 @@
 ~Convert an integer to a string~
 {
 ~load number into rF~
-1r\002r\003r\01F[2iv;
+1r\002r\003r\01F(2iv;
 v....._cP5\0arE<;
 ~convert a place value and store it~
 >FP5P=?'FPDpPEP%1p4[7P1p2ii4]7i2ddFPEP/v;
 ^......................................<;
 {
-~put the number here~\0F\00\00\00\00\00\00\00;
+~put the number here~\ff\0a\e0\ff\30\04\20\ff;
 ~array of possible numerical characters~0123456789;
 .......7;
 ~location of the string to write out~;
@@ -36,4 +36,5 @@ v....._cP5\0arE<;
 {;;.......=;
 {;;.......?;
 {;;.......>4r\0aOQ;
+{;;..........#;
 {;;.......>1d,;

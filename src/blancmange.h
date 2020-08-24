@@ -280,7 +280,6 @@ int load (unsigned char* txt, long int l)
 	cpu.p = 0;
 	return 0;
 }
-
 /* uncomment for debugging */
 //#include <stdio.h>
 int run (char (*I)(), void (*O)(char c))
@@ -299,7 +298,6 @@ int run (char (*I)(), void (*O)(char c))
 	}
 	return 0;
 }
-
 /* same as "run" but not looped */
 int step ()
 {
@@ -309,7 +307,6 @@ int step ()
 	STEP();
 	return 0;
 }
-
 /* self explainatory */
 void STEP ()
 {
@@ -347,7 +344,6 @@ void STEP ()
 			}
 	}
 }
-
 /* instruction definitions */
 void NOP () {}
 void INC_Z () {ip.o = 122;}
@@ -365,7 +361,6 @@ void BRIDGE () {
 	STEP ();
 }
 void END () { running = 0; }
-
 void R0 () {cpu.c = &cpu.r[0];}
 void R1 () {cpu.c = &cpu.r[1];}
 void R2 () {cpu.c = &cpu.r[2];}
@@ -515,7 +510,6 @@ void BR_Z () {
 	else
 		ip.o = 250;
 }
-
 void RD_B_COORD () {
 	(*cpu.c) = T[cpu.r[1]][cpu.r[2]][cpu.r[3]];
 }
@@ -622,9 +616,6 @@ void WMEM () {
 	unsigned char *point = (unsigned char *)cpu.r[4];
 	point[cpu.r[5]] = (*cpu.c);
 }
-
 void SYS () {
-
 }
-
 #endif //BLANCMANGE
