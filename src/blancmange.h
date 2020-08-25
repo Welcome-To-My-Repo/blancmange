@@ -411,7 +411,6 @@ void PUSH_R () {
 }
 void POP_R () {
 	(*cpu.c) = (*cpu.s[cpu.p - 1]);
-	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void DUP_STACK () {
@@ -425,12 +424,10 @@ void SWITCH () {
 }
 void AND () {
 	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) & (*cpu.s[cpu.p - 1]);
-	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void OR () {
 	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) | (*cpu.s[cpu.p - 1]);
-	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void NOT () {
@@ -438,32 +435,26 @@ void NOT () {
 }
 void XOR () {
 	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) ^ (*cpu.s[cpu.p - 1]);
-	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void ADD () {
 	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) + (*cpu.s[cpu.p - 1]);
-	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void SUB () {
 	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) - (*cpu.s[cpu.p - 1]);
-	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void MUL () {
 	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) * (*cpu.s[cpu.p - 1]);
-	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void DIV () {
 	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) / (*cpu.s[cpu.p - 1]);
-	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 void MOD () {
 	(*cpu.s[cpu.p - 2]) = (*cpu.s[cpu.p - 2]) % (*cpu.s[cpu.p - 1]);
-	cpu.s[cpu.p - 1] = 0;
 	cpu.p --;
 }
 
